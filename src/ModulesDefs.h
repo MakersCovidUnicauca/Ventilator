@@ -34,7 +34,12 @@ LiquidCrystal_PCF8574 lcd(0x27);  //Crear el objeto lcd  dirección  0x3F y 16 c
 /////////////////////////////////// State machine
 //////////////////////////////////////////////////
 
+/////////////////// EEPROM
+#include <EEPROM.h>
+/** the current address in the EEPROM (i.e. which byte we're going to write to next) **/
+int addrVarVent = 0x30;
 
+#define MRK_STR_VAR 0xAA  // Mark Store EEprom variable ventilator
 
 
 
