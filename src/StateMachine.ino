@@ -369,9 +369,6 @@ void functDefault(void){
   DEBUG("ERROR STATE");
 }
 
-///////////////////////////////
-
-
 // Actualiza el estado de la maquina
 void updateStateMachine()
 {
