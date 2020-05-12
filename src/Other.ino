@@ -34,6 +34,7 @@ void storeVarVent(){
 }
 
 // read a byte from the current address of the EEPROM
+// It uses a general eeprom library
 void readVarVent(){
 
   byte value = EEPROM.read(addrVarVent);
