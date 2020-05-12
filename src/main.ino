@@ -48,13 +48,17 @@ void setup(){
 void loop(){
 
   readInput();
+  // Tareas maquina de estados
   updateStateMachine();
+  //Escanea Boton 
   button.update();
+  // indica la posicion via Serial 
   updateMotorPos();
+  //Funcion para actualizacion de pasos del motor
   Motor.run();
 }
 
-// Lee la entrada por puerto serie
+// Actualizacion Tareas de maquina de estados
 void readInput()
 {
   asyncTask1.Update(asyncTask2);
