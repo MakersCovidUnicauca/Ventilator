@@ -3,9 +3,11 @@
 #define Definitions_h
 
 #include <Arduino.h>
-
 #include <Wire.h> 
+//Definicion de pines
 #include "PinOutVent.h"
+//Parametros mecanicos 
+#include "MechanicalDefinitions.h"
 
 //#define Graphic_Serial
 #define __DEBG__
@@ -23,15 +25,13 @@ String stringDebug;
 #define DEBUG(a) stringDebug = a;
 #endif
 ///////////////////////////////////
-//////////////////////////////////////////////////
+//Maquina de estados
 
 #include "AsyncTaskLib.h"
-
 void timeoutTI();
 void timeoutTH();
 void timeoutTE();
 void measurePress();
-
 AsyncTask asyncTask1(4500,timeoutTE);
 AsyncTask asyncTask2(1350,timeoutTI);
 AsyncTask asyncTask3(150,timeoutTH);
@@ -44,43 +44,9 @@ AsyncTask asyncTask4(50, true, measurePress);
 AsyncTask asyncTask4(20, true, measurePress);
 #endif
 
-/////////////////////////////////// Keypad
-//////////////////////////////////////////////////
+#include "ModulesDefs.h"
 
-#include "Keypad.h"
 
-const byte ROWS = 4; 
-const byte COLS = 3; 
-
-char hexaKeys[ROWS][COLS] = {
-  {'1', '2', '3'},
-  {'4', '5', '6'},
-  {'7', '8', '9'},
-  {'*', '0', '#'}
-};
-
-byte rowPins[ROWS] = {KEY_R1_PIN, KEY_R2_PIN, KEY_R3_PIN, KEY_R4_PIN}; 
-byte colPins[COLS] = { KEY_C1_PIN, KEY_C2_PIN, KEY_C3_PIN};
-
-int stateKey = 0;
-int pos = 0;
-char inputCode[4] = {'1', '0', '3', '0'};
-
-Keypad customKeypad = Keypad(makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); 
-
-/////////////////////////////////// Button
-//////////////////////////////////////////////////
-#include <ButtonDebounce.h>
-ButtonDebounce button(BTN_CFG_PIN, 250); //HIGH = config LOW = Normal
-void buttonChanged(int state);
-
-/////////////////////////////////// LiquidCrystal
-//////////////////////////////////////////////////
-
-#include <LiquidCrystal_PCF8574.h>
-LiquidCrystal_PCF8574 lcd(0x27);  //Crear el objeto lcd  dirección  0x3F y 16 columnas x 2 filas
-/////////////////////////////////// State machine
-//////////////////////////////////////////////////
 enum SMState
 {
   INIT,
@@ -108,38 +74,6 @@ enum SMInput
 SMState currentState;
 SMInput currentInput;
 
-///////////////////////////////////   Stepper Motor
-//////////////////////////////////////////////////
-
-#include <AccelStepper.h>
-// The X Stepper pins
-#define PulsePerRev 3200
-#define mmPerRev 60
-#define mmPerPulse  0.01875
-#define PulseXmm 53
-
-#define DelayPulse 220 // millisecond
-#define LONG_FUELLE 60 //milimetros (mm)
-#define RELMMVOL 17.67
-
-float mPosInit = 0; // mm
-float mPosEnd = LONG_FUELLE; // mm
-float mPosCurrent;  // mm
-float mPosOxi = 0;  // mm
-
-//diametro 15 cm
-//area 176 cm2
-//1.76 ml * ml
-
-#define DIST_MOTOR     60  // mm
-#define VEL_MOTOR     30.0  // mm/s
-#define ACCEL_MOTOR   30.0  // mm/s2
-
-long DistMotor = DIST_MOTOR;
-float VelMotor = VEL_MOTOR;  // mm/s
-float AcelMotor = ACCEL_MOTOR;  // mm/s2
-
-AccelStepper Motor(AccelStepper::DRIVER, STEPPER1_STEP_PIN, STEPPER1_DIR_PIN);
 
 /////////////////////////////////// Ventilator
 //////////////////////////////////////////////////

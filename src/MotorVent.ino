@@ -34,18 +34,20 @@ intended publication of this material.
 #include "Definitions.h"
 
 
+#define refDistance  70.0
 #define refSpeed  20.0
 #define refAccel  20.0
 
 void refMotor(){
-  //SetMotor(DIST_MOTOR, refSpeed, refAccel);
+  // Posicion y velocidades de busqueda
+  SetMotor(refDistance, refSpeed, refAccel);
   digitalWrite(STEPPER1_ENA_PIN,HIGH); //
   #ifdef __DEBG__
    Serial.print("Ref position ");
    Serial.println(GetPosition());
    #endif
   while(digitalRead(HALL_SENS_PIN)!= HIGH){
-   //Motor.run();
+   Motor.run();
    
    delay(20); 
   }

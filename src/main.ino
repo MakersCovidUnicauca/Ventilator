@@ -34,7 +34,7 @@ void setup(){
     digitalWrite(VALV_EXTR_PIN,LOW); //cerrar valvula de oxigeno
     digitalWrite(STEPPER1_ENA_PIN,HIGH); //cerrar valvula de oxigeno
   Serial.println ("Serching Motor");
-  refMotor(); //busca el sensor de hall solo inicio
+  refMotor(); //busca el sensor optico  solo inicio
   InitMotor(); // solo inicio
   updateMotorPos();
   Serial.println ("Finish Motor");
