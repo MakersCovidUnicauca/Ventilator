@@ -104,7 +104,7 @@ byte RPMVal = 5; //respiraciones por minuto
 float VOLVal = 500.0; //Volumen total es la cantidad de aire dado al paciente en un ciclo respiratorio
 byte IEVal = 2; //proporcion entre el periodo de inhalacion y el periodo de exhalacion
 
-float VOLRes = 0.0;
+float VOLRes = 0.0;  //Volumen resiudal 
 byte POVal = 30;  //porcentaje de oxigeno con respecto al VOL,
 byte PRVal = 20; //presion del tanque de oxigeno
 byte PMVal = 0; //Presion maxima que no se puede exceder en los metodos por presion

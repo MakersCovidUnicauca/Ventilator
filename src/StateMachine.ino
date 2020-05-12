@@ -174,8 +174,7 @@ void calculeVol(){
     FlagAire = true;
     Motor.stop();
     mPosEnd = float(VOLVal/RELMMVOL);
-    mPosEnd = 30;
-    DistMotor = mPosEnd;
+    DistMotor = INITPOSITION - mPosEnd;
     VelMotor = 100;
     AcelMotor = 100;
     SetMotor(DistMotor, VelMotor, AcelMotor);
