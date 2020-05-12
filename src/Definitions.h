@@ -9,6 +9,8 @@
 //Parametros mecanicos 
 #include "MechanicalDefinitions.h"
 
+#include "ModesVentilator.h"
+
 //#define Graphic_Serial
 #define __DEBG__
 
@@ -47,28 +49,6 @@ AsyncTask asyncTask4(20, true, measurePress);
 #include "ModulesDefs.h"
 
 
-enum SMState
-{
-  INIT,
-  CONFIG,
-  INHALE,
-  PAUSE,
-  EXHALE,
-  LISTEN,
-  EXLPAS
-};
-
-enum SMInput
-{
-  Unknown,
-  BtnConfig,
-  TIEnd,
-  THEnd,
-  TEEnd,
-  TLEnd,
-  TPEnd,
-  BtnReset
-};
 
 // Variables globales state machine
 SMState currentState;
@@ -88,24 +68,12 @@ SMInput currentInput;
 #define PRTYPE '7'  //55
 #define VOLTYPE '8' //56
 
-enum VentMode
-{
-  CV, //CONTROL POR VOLUMEN
-  CVA,  //CONTROL FOR VOLUMEN ASISTIDO
-  CP, //CONTROL POR PRESION
-  CPA  //CONTROL POR PRESION ASISTIDA
-};
+
 
 VentMode currentVentMode = CV;
 VentMode tempMode  = CV;
 
-enum AlarmType
-{
-  PWR, //CONTROL POR VOLUMEN
-  OXY,  //CONTROL FOR VOLUMEN ASISTIDO
-  ALM, //CONTROL POR PRESION
-  TEST  //CONTROL POR PRESION ASISTIDA
-};
+
 
 
 //limites inferior y superior de variables
