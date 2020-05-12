@@ -36,9 +36,7 @@ void setup(){
   Serial.println ("Serching Motor");
   refMotor(); //busca el sensor optico  solo inicio
   InitMotor(); // solo inicio
-  updateMotorPos();
   Serial.println ("Finish Motor");
-  
   currentState = INIT;
   functInit();
   currentInput = Unknown;
