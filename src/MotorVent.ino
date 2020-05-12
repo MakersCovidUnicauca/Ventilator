@@ -39,23 +39,29 @@ intended publication of this material.
 #define refAccel  20.0
 
 void refMotor(){
-  // Posicion y velocidades de busqueda
+  // Busqueda posicion de inicio
+  digitalWrite(STEPPER1_ENA_PIN,LOW); //
+
+  #ifdef InitSensorEnable
   SetMotor(refDistance, refSpeed, refAccel);
-  digitalWrite(STEPPER1_ENA_PIN,HIGH); //
-  #ifdef __DEBG__
-   Serial.print("Ref position ");
-   Serial.println(GetPosition());
-   #endif
-  while(digitalRead(HALL_SENS_PIN)!= HIGH){
+  while(digitalRead(HALL_SENS_PIN)!= LOW){
    Motor.run();
-   
+   delay(10); 
+  }
+  #else
+  digitalWrite(STEPPER1_ENA_PIN,HIGH); //
+  while(digitalRead(HALL_SENS_PIN)!= LOW){
    delay(20); 
   }
+  #endif
+
   digitalWrite(STEPPER1_ENA_PIN,LOW); //
   #ifdef __DEBG__
    Serial.print("Ref position ");
    Serial.println(GetPosition());
    #endif
+
+
 }
 
 /*F**************************************************************************
@@ -85,13 +91,13 @@ long GetPosition(){
 * return:   none
 *----------------------------------------------------------------------------
 * PURPOSE:
-* Initialize Motor at Zero Position
+* Initialize Motor at initial position
 * *----------------------------------------------------------------------------
 * NOTE:
 * 
 *****************************************************************************/
 void InitMotor(){
-  Motor.setCurrentPosition(0);
+  Motor.setCurrentPosition(INITPOSITION);
 }
 
 /*F**************************************************************************
@@ -110,7 +116,6 @@ void InitMotor(){
 * 
 *****************************************************************************/
 void SetMotor(long Distance, float speedM, float accel){
-  //Motor.setSpeed(speedM *  PulseXmm);
   Motor.setMaxSpeed(speedM *  PulseXmm);
   Motor.setAcceleration(accel * PulseXmm);
   Motor.moveTo(-Distance * PulseXmm);
