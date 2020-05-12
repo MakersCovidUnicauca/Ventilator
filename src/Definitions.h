@@ -144,12 +144,6 @@ bool FlagOxig = false;
 bool FlagAire = false;
 bool FlagPressure = false;
 
-/////////////////// EEPROM
-#include <EEPROM.h>
-/** the current address in the EEPROM (i.e. which byte we're going to write to next) **/
-int addrVarVent = 0x30;
-
-#define MRK_STR_VAR 0xAA  // Mark Store EEprom variable ventilator
 
 // Motor
 void refMotor();
