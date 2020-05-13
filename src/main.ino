@@ -11,9 +11,12 @@ void setup(){
   Serial.begin (115200);
   Wire.begin();        // join i2c bus (address optional for master)
   delay(1000);
-  Serial.println ("Ventilador");
+  DEBUG ("Ventilador");
   delay(1000);
-  Serial.print("testting");
+  DEBUG("testting");
+  #ifdef Graphic_Serial
+  Serial.println("Fuelle,Paciente ");
+  #endif
 
   offset = pressInh.readCmH2O();
   offset1 = pressExh.readCmH2O();
@@ -33,10 +36,10 @@ void setup(){
     digitalWrite(VALV_OXIG_PIN,LOW); //cerrar valvula de oxigeno
     digitalWrite(VALV_EXTR_PIN,LOW); //cerrar valvula de oxigeno
     digitalWrite(STEPPER1_ENA_PIN,HIGH); //cerrar valvula de oxigeno
-  Serial.println ("Serching Motor");
+  DEBUG("Serching Motor");
   refMotor(); //busca el sensor optico  solo inicio
   InitMotor(); // solo inicio
-  Serial.println ("Finish Motor");
+  DEBUG ("Finish Motor");
   currentState = INIT;
   functInit();
   currentInput = Unknown;
