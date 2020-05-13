@@ -29,7 +29,7 @@ void timeoutTE()
 
 void measurePress()
 {
-  DEBUG("PRESSURE");
+ 
   float pInh = pressInh.readCmH2O()-offset;
   pressureTemp = pressExh.readCmH2O()-offset1;
   float pOxig = 0.0;
@@ -37,7 +37,7 @@ void measurePress()
   if(FlagOxig == true){
     pOxig = pressOxig.readCmH2O();
     if(pOxig < PRVal){
-      alarma(AlarmType::OXY);
+      //alarma(AlarmType::OXY);
     }
   }
   FlagPressure = true;
@@ -51,6 +51,7 @@ TimestoPrint++;
 if(TimestoPrint >= TimestoPrintSerial ){
   TimestoPrint = 0;
     #ifdef __DEBG__
+      DEBUG("PRESSURE");
       Serial.print("PInh: ");
       Serial.print(pInh,3);
       Serial.print(", PExh: ");
@@ -127,7 +128,7 @@ void calculePlateau(){
     else{
       idxPlateau++;
     }
-    if(idxPlateau > 4){
+    if(idxPlateau == 4){
       String stringone = "Plateau:";
       stringone = stringone + String(pressPlateau);
       DEBUG(stringone);
@@ -189,33 +190,33 @@ void calculeVol(){
     VelMotor = float(mPosEnd/((TIVal*(1-Po))/1000.0)); 
     AcelMotor = VelMotor * 30;
     SetMotor(DistMotor, VelMotor, AcelMotor);
-    #ifdef __DEBG__
-  Serial.print("DistMotor: ");
-  Serial.print(DistMotor);
-  Serial.print(" mPosEnd: ");
-  Serial.print(mPosEnd);
-  Serial.print(" Po: ");
-  Serial.print(Po);
-  Serial.print(" mPosOxi: ");
-  Serial.println(mPosOxi);
-   
-  Serial.print("DISTM: ");
-  Serial.print(DistMotor);
-  Serial.print(" VelM: ");
-  Serial.print(VelMotor,3);
-  Serial.print("AccelM: ");
-  Serial.println(AcelMotor,3);
+  #ifdef __DEBG__
+    Serial.print(" DistMotor: ");
+    Serial.print(DistMotor);
+    Serial.print(" mPosEnd: ");
+    Serial.print(mPosEnd);
+    Serial.print(" Po: ");
+    Serial.print(Po);
+    Serial.print(" mPosOxi: ");
+    Serial.print(mPosOxi);   
+    Serial.print(" DISTM: ");
+    Serial.print(DistMotor);
+    Serial.print(" VelM: ");
+    Serial.print(VelMotor,3);
+    Serial.print(" AccelM: ");
+    Serial.println(AcelMotor,3);
 #endif
   }
 }
 
 void calculeOxig(){
+  DEBUG("OXIGENO");
   VOLRes = (mPosCurrent - mPosInit)* RELMMVOL;
   VOLRes = 0;
   float Vol = VOLVal - VOLRes;
   float Po = POVal*0.01;   //
   //mPosOxi = float((Vol*Po)/RELMMVOL);
-  mPosOxi = float(((1- Po)*VOLVal/0.79));
+  mPosOxi = VOLVal - float(((1- Po)*VOLVal/0.79));
   mPosOxi =  (mPosOxi/RELMMVOL);
   //abrir valvula de oxigeno
   digitalWrite(VALV_OXIG_PIN,HIGH);
@@ -232,13 +233,13 @@ void calculeOxig(){
   Serial.print(" Po: ");
   Serial.print(Po);
   Serial.print(" mPosOxi: ");
-  Serial.println(mPosOxi);
+  Serial.print(mPosOxi);
    
-  Serial.print("DISTM: ");
+  Serial.print(" DISTM: ");
   Serial.print(DistMotor);
   Serial.print(" VelM: ");
   Serial.print(VelMotor,3);
-  Serial.print("AccelM: ");
+  Serial.print(" AccelM: ");
   Serial.println(AcelMotor,3);
 #endif
 
@@ -321,7 +322,7 @@ void functInit(void){
 
   button.setCallback(buttonChanged);
   asyncTask5.Start(); ////Simulation sin btnConfig
-  readVarVent();  ////Simulation sin btnConfig
+  //readVarVent();  ////Simulation sin btnConfig
   
 }
 
@@ -349,6 +350,7 @@ void functPause(void){
   DEBUG("PAUSE");
   #ifdef TEST_SENSOR
   pressPlateau = pressureTemp;
+  idxPlateau = 0;
   #endif
 }
 
