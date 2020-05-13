@@ -166,39 +166,54 @@ void alarma(byte alarm){
 }
 
 void calculeVol(){
-  if((mPosCurrent == mPosOxi) && (FlagAire == false)){
+  if((Motor.isRunning() == 0) && (FlagAire == false)){
     DEBUG("AIRE");
     //cerrar valvula de oxigeno
     digitalWrite(VALV_OXIG_PIN,LOW);
     FlagOxig = false;
     FlagAire = true;
-    Motor.stop();
     mPosEnd = float(VOLVal/RELMMVOL);
-    DistMotor = INITPOSITION - mPosEnd;
-    VelMotor = 100;
-    AcelMotor = 100;
+    DistMotor = INITPOSITION - mPosEnd; 
+    // de la posicion final debe regresarse para cargar el volumen requerido
+    float Po = POVal*0.01;   //
+    VelMotor = float(mPosEnd/((TIVal*(1-Po))/1000.0)); 
+    AcelMotor = VelMotor * 30;
     SetMotor(DistMotor, VelMotor, AcelMotor);
+    #ifdef __DEBG__
+  Serial.print("DistMotor: ");
+  Serial.print(DistMotor);
+  Serial.print(" mPosEnd: ");
+  Serial.print(mPosEnd);
+  Serial.print(" Po: ");
+  Serial.print(Po);
+  Serial.print(" mPosOxi: ");
+  Serial.println(mPosOxi);
+   
+  Serial.print("DISTM: ");
+  Serial.print(DistMotor);
+  Serial.print(" VelM: ");
+  Serial.print(VelMotor,3);
+  Serial.print("AccelM: ");
+  Serial.println(AcelMotor,3);
+#endif
   }
 }
 
 void calculeOxig(){
-
   VOLRes = (mPosCurrent - mPosInit)* RELMMVOL;
   VOLRes = 0;
   float Vol = VOLVal - VOLRes;
-  float Po = POVal*0.01;
-  mPosOxi = float((Vol*Po)/RELMMVOL);
-  mPosOxi = 10;
-  
+  float Po = POVal*0.01;   //
+  //mPosOxi = float((Vol*Po)/RELMMVOL);
+  mPosOxi = float(((1- Po)*VOLVal/0.79));
+  mPosOxi =  (mPosOxi/RELMMVOL);
   //abrir valvula de oxigeno
   digitalWrite(VALV_OXIG_PIN,HIGH);
   FlagOxig = true;
-
-  DistMotor = mPosOxi;
-  VelMotor = 100;
-  AcelMotor = 100;
+  DistMotor = INITPOSITION - mPosOxi;
+  VelMotor = mPosOxi/((TIVal*Po)/1000.0);
+  AcelMotor = VelMotor*30;
   SetMotor(DistMotor, VelMotor, AcelMotor);
-
 #ifdef __DEBG__
   Serial.print("VOLRes: ");
   Serial.print(VOLRes);
@@ -308,10 +323,10 @@ void functInhale(void){
   #endif
   #ifdef TEST_MOTOR
   FlagAire = false;
-  Motor.stop();
-  DistMotor = mPosInit;
-  VelMotor = 200.07;
-  AcelMotor = 200.07;
+
+  DistMotor = INITPOSITION;
+  VelMotor =  float(mPosEnd/((TIVal/1000.0))); ;
+  AcelMotor = VelMotor * 30;
   SetMotor(DistMotor, VelMotor, AcelMotor);
   #endif  
 }
@@ -321,14 +336,10 @@ void functPause(void){
   #ifdef TEST_SENSOR
   pressPlateau = pressureTemp;
   #endif
-  #ifdef TEST_MOTOR
-  Motor.stop();
-  #endif
 }
 
 void functExhale(void){
   DEBUG("EXHALE");
-
   if (currentInput == SMInput::BtnConfig){
     #ifdef TEST_MODE
     if((PMVal == 0) && (currentVentMode >= VentMode::CP)){
@@ -336,7 +347,6 @@ void functExhale(void){
     }
     #endif
     calculeTime();
-
     #ifdef TEST_SENSOR 
     asyncTask4.Start();
     #endif
