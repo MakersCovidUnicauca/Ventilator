@@ -34,9 +34,13 @@ void timeoutTI();
 void timeoutTH();
 void timeoutTE();
 void measurePress();
+void waitConfig();
+
 AsyncTask asyncTask1(4500,timeoutTE);
 AsyncTask asyncTask2(1350,timeoutTI);
 AsyncTask asyncTask3(150,timeoutTH);
+
+AsyncTask asyncTask5(2000, false, waitConfig);
 
 int TimestoPrint = 0;
 AsyncTask asyncTask4(20, true, measurePress);

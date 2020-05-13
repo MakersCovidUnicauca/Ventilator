@@ -63,4 +63,5 @@ void readInput()
   asyncTask2.Update(asyncTask3);
   asyncTask3.Update(asyncTask1);
   asyncTask4.Update();
+  asyncTask5.Update();
 }

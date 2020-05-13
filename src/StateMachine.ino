@@ -3,6 +3,12 @@
 
 #include "Definitions.h"
 
+////Simulation sin btnConfig
+void waitConfig(){
+  DEBUG("TI_CONFIG");
+  currentInput = SMInput::BtnConfig;
+}
+
 void timeoutTI()
 {
   DEBUG("TI_END");
@@ -243,6 +249,8 @@ void stateInit()
 {
   if (currentInput == SMInput::BtnReset)
     changeState(SMState::CONFIG);
+  if (currentInput == SMInput::BtnConfig) //Simulation sin btnConfig
+    changeState(SMState::EXHALE); ////Simulation sin btnConfig
 }
 
 // Acciones de los estados y condiciones de transiciones
@@ -312,6 +320,8 @@ void functInit(void){
   lcd.print("Ventilador ");
 
   button.setCallback(buttonChanged);
+  asyncTask5.Start(); ////Simulation sin btnConfig
+  readVarVent();  ////Simulation sin btnConfig
   
 }
 
