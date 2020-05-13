@@ -50,14 +50,16 @@ void refMotor(){
   }
   #else
   digitalWrite(STEPPER1_ENA_PIN,HIGH); //
-  while(digitalRead(HALL_SENS_PIN)!= LOW){
-   delay(20); 
+  delay(1000);
+  while(digitalRead(HALL_SENS_PIN)!= HIGH){
+   delay(200); 
+   Serial.println("waiting position ");
   }
   #endif
 
   digitalWrite(STEPPER1_ENA_PIN,LOW); //
   #ifdef __DEBG__
-   Serial.print("Ref position ");
+   Serial.print("Refered position ");
    Serial.println(GetPosition());
    #endif
 
@@ -78,8 +80,8 @@ void refMotor(){
 * Monitor Current Position in the Ventilator Operation
 *****************************************************************************/
 
-long GetPosition(){
-  long positionMotor = 0;
+float GetPosition(){
+  float positionMotor = 0;
   positionMotor = -Motor.currentPosition()/PulseXmm;
   return positionMotor;
 }
@@ -115,10 +117,11 @@ void InitMotor(){
 * NOTE:
 * 
 *****************************************************************************/
-void SetMotor(long Distance, float speedM, float accel){
+void SetMotor(float Distance, float speedM, float accel){
+  long DistanceValue = (long)Distance * PulseXmm;
   Motor.setMaxSpeed(speedM *  PulseXmm);
   Motor.setAcceleration(accel * PulseXmm);
-  Motor.moveTo(-Distance * PulseXmm);
+  Motor.moveTo(-DistanceValue);
 }
 
 /*F**************************************************************************
@@ -134,11 +137,11 @@ void SetMotor(long Distance, float speedM, float accel){
 * 
 *****************************************************************************/
 void updateMotorPos(){
-  int dist = GetPosition();
+  int dist = (int)GetPosition();
   if(mPosCurrent != dist){
     String stringone = "Dist:";
     stringone = stringone + String(dist);
     mPosCurrent = dist;
-    DEBUG(stringone);
+    //DEBUG(stringone);
   }
 }
