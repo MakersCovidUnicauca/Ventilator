@@ -39,12 +39,11 @@ AsyncTask asyncTask2(1350,timeoutTI);
 AsyncTask asyncTask3(150,timeoutTH);
 
 int TimestoPrint = 0;
-#ifdef __DEBG__
 AsyncTask asyncTask4(20, true, measurePress);
+#ifdef __DEBG__
 #define TimestoPrintSerial  100
 #endif
 #ifdef Graphic_Serial
-AsyncTask asyncTask4(20, true, measurePress);
 #define TimestoPrintSerial  1
 #endif
 
