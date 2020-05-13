@@ -11,11 +11,11 @@
 
 #include "ModesVentilator.h"
 
-//#define Graphic_Serial
-#define __DEBG__
+#define Graphic_Serial
+//#define __DEBG__
 
 #define TEST_SENSOR
-//#define TEST_MOTOR
+#define TEST_MOTOR
 //#define TEST_LCD
 //#define TEST_MODE
 
@@ -45,7 +45,7 @@ AsyncTask asyncTask5(2000, false, waitConfig);
 int TimestoPrint = 0;
 AsyncTask asyncTask4(20, true, measurePress);
 #ifdef __DEBG__
-#define TimestoPrintSerial  100
+#define TimestoPrintSerial  500
 #endif
 #ifdef Graphic_Serial
 #define TimestoPrintSerial  1
@@ -105,7 +105,7 @@ const byte PLI_FAB = 40; //Presion Limite Inhalacion
 // valores por defecto y actualizados por el usuario
 byte PIPVal = 28; //Peak inspiratory pressure
 byte PEEPVal = 6; //presion residual en el sistema despues de la fase de exhalacion
-byte RPMVal = 5; //respiraciones por minuto
+byte RPMVal = 30; //respiraciones por minuto
 float VOLVal = 500.0; //Volumen total es la cantidad de aire dado al paciente en un ciclo respiratorio
 byte IEVal = 2; //proporcion entre el periodo de inhalacion y el periodo de exhalacion
 
