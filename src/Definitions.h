@@ -38,12 +38,14 @@ AsyncTask asyncTask1(4500,timeoutTE);
 AsyncTask asyncTask2(1350,timeoutTI);
 AsyncTask asyncTask3(150,timeoutTH);
 
+int TimestoPrint = 0;
 #ifdef __DEBG__
-AsyncTask asyncTask4(50, true, measurePress);
+AsyncTask asyncTask4(20, true, measurePress);
+#define TimestoPrintSerial  100
 #endif
-
 #ifdef Graphic_Serial
 AsyncTask asyncTask4(20, true, measurePress);
+#define TimestoPrintSerial  1
 #endif
 
 #include "ModulesDefs.h"

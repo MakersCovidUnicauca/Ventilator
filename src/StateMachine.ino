@@ -40,21 +40,25 @@ void measurePress()
   updateDisplayPressure();
 #endif
 
-#ifdef __DEBG__
-Serial.print("PInh: ");
-Serial.print(pInh,3);
-Serial.print(", PExh: ");
-Serial.print(pressureTemp,3);
-Serial.print(", POxig: ");
-Serial.println(pOxig,3);
-#endif
-#ifdef  Graphic_Serial
- Serial.print(pInh,3);
- Serial.print(",");// PExh: ");
- Serial.print(pressureTemp,3);
- Serial.println(" ");
-#endif
-
+// 
+TimestoPrint++;
+if(TimestoPrint >= TimestoPrintSerial ){
+  TimestoPrint = 0;
+    #ifdef __DEBG__
+      Serial.print("PInh: ");
+      Serial.print(pInh,3);
+      Serial.print(", PExh: ");
+      Serial.print(pressureTemp,3);
+      Serial.print(", POxig: ");
+      Serial.println(pOxig,3);
+  #endif
+  #ifdef  Graphic_Serial
+    Serial.print(pInh,3);
+    Serial.print(",");
+    Serial.print(pressureTemp,3);
+    Serial.println(" ");
+  #endif
+}
 }
 
 void CtrlPressure(){
