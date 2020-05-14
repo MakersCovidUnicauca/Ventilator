@@ -38,7 +38,6 @@ void setup(){
     digitalWrite(STEPPER1_ENA_PIN,HIGH); //cerrar valvula de oxigeno
   DEBUG("Serching Motor");
   refMotor(); //busca el sensor optico  solo inicio
-  InitMotor(); // solo inicio
   DEBUG ("Finish Motor");
   currentState = INIT;
   functInit();

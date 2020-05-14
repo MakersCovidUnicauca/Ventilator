@@ -43,11 +43,25 @@ void refMotor(){
   digitalWrite(STEPPER1_ENA_PIN,LOW); //
 
   #ifdef InitSensorEnable
+  DEBUG("Searching position ");
   SetMotor(refDistance, refSpeed, refAccel);
   while(digitalRead(HALL_SENS_PIN)!= LOW){
    Motor.run();
    delay(10); 
   }
+  InitMotor(); //Define 60 position
+  SetMotor(BACKINITPOS, refSpeed, refAccel);
+  while (Motor.isRunning() != 0);
+  {
+   Motor.run();
+   delay(10); 
+  }
+  SetMotor(refDistance, refSpeed/10.0, refAccel/10.0);
+  while(digitalRead(HALL_SENS_PIN)!= LOW){
+   Motor.run();
+   delay(10); 
+  }
+  InitMotor(); //Define 60 position
   #else
   digitalWrite(STEPPER1_ENA_PIN,HIGH); //
   delay(1000);

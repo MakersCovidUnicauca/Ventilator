@@ -153,7 +153,7 @@ bool FlagPressure = false;
 // Motor
 void refMotor();
 void InitMotor();
-void SetMotor(long Distance, float speedM, float accel);
+void SetMotor(float Distance, float speedM, float accel);
 // State Machine
 void updateMotorPos();
 void functInit();
