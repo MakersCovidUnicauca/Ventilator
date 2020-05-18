@@ -11,8 +11,8 @@
 
 #include "ModesVentilator.h"
 
-//#define Graphic_Serial
-#define __DEBG__
+#define Graphic_Serial
+//#define __DEBG__
 
 #define TEST_SENSOR
 #define TEST_MOTOR
@@ -105,9 +105,11 @@ const byte PLI_FAB = 40; //Presion Limite Inhalacion
 // valores por defecto y actualizados por el usuario
 byte PIPVal = 28; //Peak inspiratory pressure
 byte PEEPVal = 6; //presion residual en el sistema despues de la fase de exhalacion
-byte RPMVal = 30; //respiraciones por minuto
-float VOLVal = 500.0; //Volumen total es la cantidad de aire dado al paciente en un ciclo respiratorio
-byte IEVal = 2; //proporcion entre el periodo de inhalacion y el periodo de exhalacion
+byte RPMVal = 15; //respiraciones por minuto
+float VOLVal = 300.0; //Volumen total es la cantidad de aire dado al paciente en un ciclo respiratorio
+byte IEVal = 4; //proporcion entre el periodo de inhalacion y el periodo de exhalacion
+
+
 
 float VOLRes = 0.0;  //Volumen resiudal 
 byte POVal = 30;  //porcentaje de oxigeno con respecto al VOL,

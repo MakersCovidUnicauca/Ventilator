@@ -30,7 +30,7 @@ float mPosOxi = 0;  // mm
 #define VEL_MOTOR     30.0  // mm/s
 #define ACCEL_MOTOR   30.0  // mm/s2
 #define INITPOSITION  60
-#define BACKINITPOS   INITPOSITION - 3
+#define BACKINITPOS   INITPOSITION - 5
 
 #define InitSensorEnable 
 

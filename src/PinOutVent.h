@@ -2,6 +2,7 @@
 //#define Arduino_PCB
 #ifndef PINOUT_BOARDS
 #define PINOUT_BOARDS
+
 #define ESP32_PCB
 
 #ifdef ESP32_PCB

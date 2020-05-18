@@ -45,21 +45,27 @@ void refMotor(){
   #ifdef InitSensorEnable
   DEBUG("Searching position ");
   SetMotor(refDistance, refSpeed, refAccel);
-  while(digitalRead(HALL_SENS_PIN)!= LOW){
+  while(digitalRead(HALL_SENS_PIN)!= HIGH){
    Motor.run();
    delay(10); 
   }
   InitMotor(); //Define 60 position
+  DEBUG("Entering back ");
   SetMotor(BACKINITPOS, refSpeed, refAccel);
-  while (Motor.isRunning() != 0);
+  while (Motor.isRunning() > 0)
   {
    Motor.run();
-   delay(10); 
+   delay(1);
   }
+  #ifdef __DEBG__
+   DEBUG("Got position ");
+   Serial.println(GetPosition());
+  #endif
   SetMotor(refDistance, refSpeed/10.0, refAccel/10.0);
-  while(digitalRead(HALL_SENS_PIN)!= LOW){
+  DEBUG("Setting again ");
+  while(digitalRead(HALL_SENS_PIN)!= HIGH){
    Motor.run();
-   delay(10); 
+   delay(1); 
   }
   InitMotor(); //Define 60 position
   #else
@@ -73,6 +79,7 @@ void refMotor(){
 
   digitalWrite(STEPPER1_ENA_PIN,LOW); //
   #ifdef __DEBG__
+   DEBUG("Refered position ");
    Serial.print("Refered position ");
    Serial.println(GetPosition());
    #endif
@@ -113,7 +120,7 @@ float GetPosition(){
 * 
 *****************************************************************************/
 void InitMotor(){
-  Motor.setCurrentPosition(INITPOSITION);
+  Motor.setCurrentPosition(-INITPOSITION*PulseXmm);
 }
 
 /*F**************************************************************************
