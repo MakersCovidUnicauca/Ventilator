@@ -18,7 +18,6 @@ intended publication of this material.
 ******************************************************************************
 */
 
-
 /*F**************************************************************************
 * NAME: refMotor
 *----------------------------------------------------------------------------
@@ -33,58 +32,59 @@ intended publication of this material.
 *****************************************************************************/
 #include "Definitions.h"
 
+#define refDistance 70.0
+#define refSpeed 20.0
+#define refAccel 20.0
 
-#define refDistance  70.0
-#define refSpeed  20.0
-#define refAccel  20.0
-
-void refMotor(){
+void refMotor()
+{
   // Busqueda posicion de inicio
-  digitalWrite(STEPPER1_ENA_PIN,LOW); //
+  digitalWrite(STEPPER1_ENA_PIN, LOW); //
 
-  #ifdef InitSensorEnable
+#ifdef InitSensorEnable
   DEBUG("Searching position ");
   SetMotor(refDistance, refSpeed, refAccel);
-  while(digitalRead(HALL_SENS_PIN)!= HIGH){
-   Motor.run();
-   delay(10); 
+  while (digitalRead(HALL_SENS_PIN) != HIGH)
+  {
+    Motor.run();
+    delay(10);
   }
   InitMotor(); //Define 60 position
   DEBUG("Entering back ");
   SetMotor(BACKINITPOS, refSpeed, refAccel);
   while (Motor.isRunning() > 0)
   {
-   Motor.run();
-   delay(1);
+    Motor.run();
+    delay(1);
   }
-  #ifdef __DEBG__
-   DEBUG("Got position ");
-   Serial.println(GetPosition());
-  #endif
-  SetMotor(refDistance, refSpeed/10.0, refAccel/10.0);
+#ifdef __DEBG__
+  DEBUG("Got position ");
+  Serial.println(GetPosition());
+#endif
+  SetMotor(refDistance, refSpeed / 10.0, refAccel / 10.0);
   DEBUG("Setting again ");
-  while(digitalRead(HALL_SENS_PIN)!= HIGH){
-   Motor.run();
-   delay(1); 
+  while (digitalRead(HALL_SENS_PIN) != HIGH)
+  {
+    Motor.run();
+    delay(1);
   }
   InitMotor(); //Define 60 position
-  #else
-  digitalWrite(STEPPER1_ENA_PIN,HIGH); //
+#else
+  digitalWrite(STEPPER1_ENA_PIN, HIGH); //
   delay(1000);
-  while(digitalRead(HALL_SENS_PIN)!= HIGH){
-   delay(200); 
-   Serial.println("waiting position ");
+  while (digitalRead(HALL_SENS_PIN) != HIGH)
+  {
+    delay(200);
+    Serial.println("waiting position ");
   }
-  #endif
+#endif
 
-  digitalWrite(STEPPER1_ENA_PIN,LOW); //
-  #ifdef __DEBG__
-   DEBUG("Refered position ");
-   Serial.print("Refered position ");
-   Serial.println(GetPosition());
-   #endif
-
-
+  digitalWrite(STEPPER1_ENA_PIN, LOW); //
+#ifdef __DEBG__
+  DEBUG("Refered position ");
+  Serial.print("Refered position ");
+  Serial.println(GetPosition());
+#endif
 }
 
 /*F**************************************************************************
@@ -101,9 +101,10 @@ void refMotor(){
 * Monitor Current Position in the Ventilator Operation
 *****************************************************************************/
 
-float GetPosition(){
+float GetPosition()
+{
   float positionMotor = 0;
-  positionMotor = -Motor.currentPosition()/PulseXmm;
+  positionMotor = -Motor.currentPosition() / PulseXmm;
   return positionMotor;
 }
 
@@ -119,8 +120,9 @@ float GetPosition(){
 * NOTE:
 * 
 *****************************************************************************/
-void InitMotor(){
-  Motor.setCurrentPosition(-INITPOSITION*PulseXmm);
+void InitMotor()
+{
+  Motor.setCurrentPosition(-INITPOSITION * PulseXmm);
 }
 
 /*F**************************************************************************
@@ -138,9 +140,10 @@ void InitMotor(){
 * NOTE:
 * 
 *****************************************************************************/
-void SetMotor(float Distance, float speedM, float accel){
+void SetMotor(float Distance, float speedM, float accel)
+{
   long DistanceValue = (long)Distance * PulseXmm;
-  Motor.setMaxSpeed(speedM *  PulseXmm);
+  Motor.setMaxSpeed(speedM * PulseXmm);
   Motor.setAcceleration(accel * PulseXmm);
   Motor.moveTo(-DistanceValue);
 }
@@ -157,9 +160,11 @@ void SetMotor(float Distance, float speedM, float accel){
 * NOTE:
 * 
 *****************************************************************************/
-void updateMotorPos(){
+void updateMotorPos()
+{
   int dist = (int)GetPosition();
-  if(mPosCurrent != dist){
+  if (mPosCurrent != dist)
+  {
     String stringone = "Dist:";
     stringone = stringone + String(dist);
     mPosCurrent = dist;
