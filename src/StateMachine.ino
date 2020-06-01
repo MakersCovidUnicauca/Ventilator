@@ -56,10 +56,10 @@ void measurePress()
 #endif
 
   //
-  TimestoPrint++;
-  if (TimestoPrint >= TimestoPrintSerial)
+  TimestoSend++;
+  if (TimestoSend >= TimeSendGraphic)
   {
-    TimestoPrint = 0;
+    TimestoSend = 0;
 #ifdef __DEBG__
     DEBUG("PRESSURE");
     Serial.print("PInh: ");
@@ -75,6 +75,12 @@ void measurePress()
     Serial.print(pressureTemp, 3);
     Serial.println(" ");
 #endif
+    sendGraphicFlag = 1;
+
+  }
+  else{
+    preUser[TimestoSend] = pInh;
+    volUser[TimestoSend] = GetPosition();
   }
 }
 

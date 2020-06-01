@@ -74,17 +74,14 @@ void refMotor()
   delay(1000);
   while (digitalRead(HALL_SENS_PIN) != HIGH)
   {
-    delay(200);
-    Serial.println("waiting position ");
+    delay(1000);
+    DEBUG("waiting position ");
   }
-#endif
-
-  digitalWrite(STEPPER1_ENA_PIN, LOW); //
-#ifdef __DEBG__
-  DEBUG("Refered position ");
-  Serial.print("Refered position ");
+  InitMotor(); //Define 60 position
   Serial.println(GetPosition());
 #endif
+digitalWrite(STEPPER1_ENA_PIN, LOW); //Serial.println 
+
 }
 
 /*F**************************************************************************
@@ -104,7 +101,7 @@ void refMotor()
 float GetPosition()
 {
   float positionMotor = 0;
-  positionMotor = -Motor.currentPosition() / PulseXmm;
+  positionMotor = Motor.currentPosition() / PulseXmm;
   return positionMotor;
 }
 
@@ -122,7 +119,7 @@ float GetPosition()
 *****************************************************************************/
 void InitMotor()
 {
-  Motor.setCurrentPosition(-INITPOSITION * PulseXmm);
+  Motor.setCurrentPosition(INITPOSITION * PulseXmm);
 }
 
 /*F**************************************************************************
@@ -145,7 +142,7 @@ void SetMotor(float Distance, float speedM, float accel)
   long DistanceValue = (long)Distance * PulseXmm;
   Motor.setMaxSpeed(speedM * PulseXmm);
   Motor.setAcceleration(accel * PulseXmm);
-  Motor.moveTo(-DistanceValue);
+  Motor.moveTo(DistanceValue);
 }
 
 /*F**************************************************************************

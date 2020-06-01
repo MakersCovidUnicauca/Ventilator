@@ -8,11 +8,13 @@
 #include "PinOutVent.h"
 //Parametros mecanicos
 #include "MechanicalDefinitions.h"
-
+//Modos Ventilador
 #include "ModesVentilator.h"
+//Websocket
+#include "WebsocketVent.h"
 
-#define Graphic_Serial
-//#define __DEBG__
+//#define Graphic_Serial
+#define __DEBG__
 
 #define TEST_SENSOR
 #define TEST_MOTOR
@@ -44,14 +46,18 @@ AsyncTask asyncTask3(150, timeoutTH);
 
 AsyncTask asyncTask5(2000, false, waitConfig);
 
-int TimestoPrint = 0;
-AsyncTask asyncTask4(20, true, measurePress);
+int TimestoSend = 0;
+AsyncTask asyncTask4(200, true, measurePress);
 #ifdef __DEBG__
-#define TimestoPrintSerial 500
+#define TimeSendGraphic 40
 #endif
 #ifdef Graphic_Serial
 #define TimestoPrintSerial 1
 #endif
+
+float preUser[TimeSendGraphic];
+float volUser[TimeSendGraphic];
+
 
 #include "ModulesDefs.h"
 
@@ -61,6 +67,19 @@ SMInput currentInput;
 
 /////////////////////////////////// Ventilator
 //////////////////////////////////////////////////
+
+// valores por defecto y actualizados por el usuario
+float PIPVal = 28;     //Peak inspiratory pressure
+float PEEPVal = 6;     //presion residual en el sistema despues de la fase de exhalacion
+byte RPMVal = 15;     //respiraciones por minuto
+float VOLVal = 300.0; //Volumen total es la cantidad de aire dado al paciente en un ciclo respiratorio
+byte IEVal = 2;       //proporcion entre el periodo de inhalacion y el periodo de exhalacion
+
+float VOLRes = 0.0; //Volumen resiudal
+byte POVal = 30;    //porcentaje de oxigeno con respecto al VOL,
+byte PRVal = 20;    //presion del tanque de oxigeno
+byte PMVal = 0;     //Presion maxima que no se puede exceder en los metodos por presion
+
 
 // ventilador mechanic variables configuradas segun el keypad
 #define MDTYPE '1'   // 49 configure the ventilator mode
@@ -96,17 +115,7 @@ const byte PRMAX = 55; //
 const byte PM_FAB = 60;  //Presion maxima que no se puede exceder en los metodos por presion
 const byte PLI_FAB = 40; //Presion Limite Inhalacion
 
-// valores por defecto y actualizados por el usuario
-byte PIPVal = 28;     //Peak inspiratory pressure
-byte PEEPVal = 6;     //presion residual en el sistema despues de la fase de exhalacion
-byte RPMVal = 15;     //respiraciones por minuto
-float VOLVal = 300.0; //Volumen total es la cantidad de aire dado al paciente en un ciclo respiratorio
-byte IEVal = 4;       //proporcion entre el periodo de inhalacion y el periodo de exhalacion
 
-float VOLRes = 0.0; //Volumen resiudal
-byte POVal = 30;    //porcentaje de oxigeno con respecto al VOL,
-byte PRVal = 20;    //presion del tanque de oxigeno
-byte PMVal = 0;     //Presion maxima que no se puede exceder en los metodos por presion
 
 // valores calculados en milliseconds
 uint16_t TVal = 0;  //The length of time (in seconds) of an inhale/exhale cycle
@@ -147,6 +156,7 @@ bool FlagPressure = false;
 void refMotor();
 void InitMotor();
 void SetMotor(float Distance, float speedM, float accel);
+float GetPosition();
 // State Machine
 void updateMotorPos();
 void functInit();
@@ -164,5 +174,9 @@ void buttonChanged(int state);
 void storeVarVent();
 void readVarVent();
 void measurePress();
+
+//Graficas
+void loopGraphic();
+void setupGraphics();
 
 #endif
