@@ -13,8 +13,8 @@
 //Websocket
 #include "WebsocketVent.h"
 
-//#define Graphic_Serial
-#define __DEBG__
+#define Graphic_Serial
+//#define __DEBG__
 
 #define TEST_SENSOR
 #define TEST_MOTOR
@@ -27,8 +27,8 @@
     Serial.print(": ");     \
     Serial.println(a);
 #else
-String stringDebug;
-#define DEBUG(a) stringDebug = a;
+String TestString;
+#define DEBUG(a)  TestString = String(a);
 #endif
 ///////////////////////////////////
 //Maquina de estados
@@ -48,12 +48,8 @@ AsyncTask asyncTask5(2000, false, waitConfig);
 
 int TimestoSend = 0;
 AsyncTask asyncTask4(25, true, measurePress);
-#ifdef __DEBG__
+
 #define TimeSendGraphic 20
-#endif
-#ifdef Graphic_Serial
-#define TimestoPrintSerial 1
-#endif
 
 float preUser[TimeSendGraphic];
 float volUser[TimeSendGraphic];

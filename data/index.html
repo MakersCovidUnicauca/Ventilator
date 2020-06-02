@@ -238,11 +238,14 @@ Chart.defaults.global.pointDotStrokeWidth = 2;
       console.log( chartP.data.datasets[0].data.length);
       windowGraphic++;
        if(windowGraphic > 19 ){
-          windowGraphic = 0;
-          var lengthData = chartP.data.datasets[0].data.length;
+        //windowGraphic = 0;
+          windowGraphic = 19;
+          var lengthData = 20;//chartP.data.datasets[0].data.length;
           for(let xx = 0;xx < lengthData;xx++){
-            chartP.data.datasets[0].data.pop();
-            chartV.data.datasets[0].data.pop();
+            //chartP.data.datasets[0].data.pop();
+            //chartV.data.datasets[0].data.pop();
+            chartP.data.datasets[0].data.shift();
+            chartV.data.datasets[0].data.shift();
           }
         }
       doSend("EndGraphic");

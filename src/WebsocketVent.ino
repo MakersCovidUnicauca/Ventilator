@@ -23,7 +23,7 @@ void onWebSocketEvent(uint8_t client_num,
 
   // Client has disconnected
   case WStype_DISCONNECTED:
-    Serial.printf("[%u] Disconnected!\n", client_num);
+    //Serial.printf("[%u] Disconnected!\n", client_num);
     StateClient = 0;
     break;
 
@@ -31,15 +31,15 @@ void onWebSocketEvent(uint8_t client_num,
   case WStype_CONNECTED:
   {
     IPAddress ip = webSocket.remoteIP(client_num);
-    Serial.printf("[%u] Connection from ", client_num);
-    Serial.println(ip.toString());
+    //Serial.printf("[%u] Connection from ", client_num);
+    DEBUG(ip.toString());
     StateClient = 1;
   }
   break;
   // Handle text messages from client
   case WStype_TEXT:
     // Print out raw message
-    Serial.printf("[%u] Received text: %s\n", client_num, payload);
+    //DEBUG("[%u] Received text: %s\n", client_num, payload);
     if (strcmp((char *)payload, "EndGraphic") == 0)
     {
       StateClient = 1;
@@ -51,7 +51,7 @@ void onWebSocketEvent(uint8_t client_num,
         StatusGraphic = 1;
       }
       else{
-        Serial.println(" Message not recognized");
+        DEBUG(" Message not recognized");
       }
     }
     break;
@@ -71,7 +71,7 @@ void onWebSocketEvent(uint8_t client_num,
 void onIndexRequest(AsyncWebServerRequest *request)
 {
   IPAddress remote_ip = request->client()->remoteIP();
-  Serial.println("[" + remote_ip.toString() +
+  DEBUG("[" + remote_ip.toString() +
                  "] HTTP GET request of " + request->url());
   request->send(SPIFFS, "/index.html", "text/html");
 }
@@ -80,7 +80,7 @@ void onIndexRequest(AsyncWebServerRequest *request)
 void onCSSRequest(AsyncWebServerRequest *request)
 {
   IPAddress remote_ip = request->client()->remoteIP();
-  Serial.println("[" + remote_ip.toString() +
+  DEBUG("[" + remote_ip.toString() +
                  "] HTTP GET request of " + request->url());
   request->send(SPIFFS, "/style.css", "text/css");
 }
@@ -89,7 +89,7 @@ void onCSSRequest(AsyncWebServerRequest *request)
 void onPageNotFound(AsyncWebServerRequest *request)
 {
   IPAddress remote_ip = request->client()->remoteIP();
-  Serial.println("[" + remote_ip.toString() +
+  DEBUG("[" + remote_ip.toString() +
                  "] HTTP GET request of " + request->url());
   request->send(404, "text/plain", "Not found");
 }
@@ -106,12 +106,12 @@ void setupGraphics()
   // Make sure we can read the file system
   if (!SPIFFS.begin())
   {
-    Serial.println("Error mounting SPIFFS");
+    DEBUG("Error mounting SPIFFS");
     while (1)
       ;
   }
 
-  WiFi.begin(ssid, password);
+  WiFi.begin(ssid1, password1);
   // Wait for connection
   byte counterWifi = 0;
   while (WiFi.status() != WL_CONNECTED) {
@@ -175,39 +175,21 @@ void StateGraphicSend(){
 byte multi = 1;
 void SendGraphics()
 {
-  float senoFun = 0.0;
     msg2Web = "v";
     for (int i = 0; i < TimeSendGraphic; i ++)
       {
-        senoFun = sin((i + multi) * 0.0174533);
         msg2Web += "," + String(volUser[i]);
       }
-    Serial.println(msg2Web);
+    DEBUG(msg2Web);
     webSocket.sendTXT(numClient, msg2Web);
     msg2Web = "p";
-    for (int i = 0; i < 200; i += 10)
+    for (int i = 0; i < TimeSendGraphic; i++)
       {
-        senoFun = cos((i + multi) * 0.0174533);
-        msg2Web += "," + String(senoFun);
+        msg2Web += "," + String(preUser[i]);
       }
       multi += 5;
-      Serial.println(msg2Web);
-    /*
-    for (int i = 0; i < TimeSendGraphic; i ++)
-    {
-      dtostrf( volUser[i], 1, 1, buff);
-      msg2Web += "," + String(buff);
-    }
-    webSocket.sendTXT(numClient, msg2Web);
-    msg2Web = "p";
-    for (int i = 0; i < TimeSendGraphic; i ++)
-    {
-      dtostrf( preUser[i], 1, 1, buff);
-      msg2Web += "," + String(buff);
-    }
-    */
-
-  //Serial.println(msg2Web);
+    DEBUG(msg2Web);
+    
  
 }
 

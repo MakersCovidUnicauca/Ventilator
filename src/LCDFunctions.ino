@@ -37,6 +37,9 @@ void InitLCDVent(){
   lcd.setBacklight(255);
   lcd.home();
   lcd.clear();
+  lcd.print("Ventilador Pube ");
+  lcd.setCursor(0, 1);
+  lcd.print("Init Wifi");
 }
 
 
@@ -44,9 +47,11 @@ void refMotorLCD(){
   // set up the LCD's number of columns and rows:
   lcd.home();
   lcd.clear();
-  lcd.print("Ventilador PUbe ");
+  lcd.print("Ventilador Pube ");
   lcd.setCursor(0, 1);
   lcd.print("ref Motor");
+  lcd.setCursor(0, 2);
+  lcd.print(WiFi.localIP());
 }
 
 void updateDisplay(void)

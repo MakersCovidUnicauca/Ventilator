@@ -51,8 +51,17 @@ void measurePress()
   }
   FlagPressure = true;
 
+
+
+
 #ifdef TEST_LCD
   updateDisplayPressure();
+#endif
+#ifdef Graphic_Serial
+    Serial.print(pInh, 3);
+    Serial.print(",");
+    Serial.print(GetPosition());
+    Serial.println(" ");
 #endif
   preUser[TimestoSend] = pInh;
   volUser[TimestoSend] = GetPosition();
@@ -69,14 +78,7 @@ void measurePress()
     Serial.print(", POxig: ");
     Serial.println(pOxig, 3);
 #endif
-#ifdef Graphic_Serial
-    Serial.print(pInh, 3);
-    Serial.print(",");
-    Serial.print(pressureTemp, 3);
-    Serial.println(" ");
-#endif
-    sendGraphicFlag = 1;
-
+  sendGraphicFlag = 1;
   }
   
 }
@@ -356,6 +358,8 @@ void functInit(void)
   lcd.print("Ventilador ");
   lcd.setCursor(0, 1);
   lcd.print("Init ");
+  lcd.setCursor(0, 2);
+  lcd.print(WiFi.localIP());
   button.setCallback(buttonChanged);
   asyncTask5.Start(); ////Simulation sin btnConfig
   //readVarVent();  ////Simulation sin btnConfig
