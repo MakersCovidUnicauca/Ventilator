@@ -32,6 +32,23 @@ intended publication of this material.
 *****************************************************************************/
 #include "Definitions.h"
 
+void InitLCDVent(){
+  lcd.begin(20, 4);
+  lcd.setBacklight(255);
+  lcd.home();
+  lcd.clear();
+}
+
+
+void refMotorLCD(){
+  // set up the LCD's number of columns and rows:
+  lcd.home();
+  lcd.clear();
+  lcd.print("Ventilador PUbe ");
+  lcd.setCursor(0, 1);
+  lcd.print("ref Motor");
+}
+
 void updateDisplay(void)
 {
   lcd.clear();

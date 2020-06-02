@@ -54,9 +54,9 @@ void measurePress()
 #ifdef TEST_LCD
   updateDisplayPressure();
 #endif
-
-  //
-  TimestoSend++;
+  preUser[TimestoSend] = pInh;
+  volUser[TimestoSend] = GetPosition();
+  TimestoSend++; 
   if (TimestoSend >= TimeSendGraphic)
   {
     TimestoSend = 0;
@@ -78,10 +78,7 @@ void measurePress()
     sendGraphicFlag = 1;
 
   }
-  else{
-    preUser[TimestoSend] = pInh;
-    volUser[TimestoSend] = GetPosition();
-  }
+  
 }
 
 void CtrlPressure()
@@ -354,14 +351,11 @@ void stateExlPas()
 void functInit(void)
 {
   DEBUG("INIT");
-
-  // set up the LCD's number of columns and rows:
-  lcd.begin(20, 4);
-  lcd.setBacklight(255);
   lcd.home();
   lcd.clear();
   lcd.print("Ventilador ");
-
+  lcd.setCursor(0, 1);
+  lcd.print("Init ");
   button.setCallback(buttonChanged);
   asyncTask5.Start(); ////Simulation sin btnConfig
   //readVarVent();  ////Simulation sin btnConfig

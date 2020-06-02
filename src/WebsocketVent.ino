@@ -173,35 +173,25 @@ void StateGraphicSend(){
 
 
 byte multi = 1;
-byte var2Send = 0;
 void SendGraphics()
 {
-  int value = 400;
   float senoFun = 0.0;
-  if(var2Send == 0){
-      msg2Web = "v";
-    for (int i = 0; i < 40; i ++)
+    msg2Web = "v";
+    for (int i = 0; i < TimeSendGraphic; i ++)
       {
         senoFun = sin((i + multi) * 0.0174533);
         msg2Web += "," + String(volUser[i]);
       }
-      Serial.println(msg2Web);
-      var2Send =1;
-  }
-  else{
-     msg2Web = "p";
-    for (int i = 0; i < value; i += 10)
+    Serial.println(msg2Web);
+    webSocket.sendTXT(numClient, msg2Web);
+    msg2Web = "p";
+    for (int i = 0; i < 200; i += 10)
       {
         senoFun = cos((i + multi) * 0.0174533);
-        msg2Web += "," + String(i*0.02);
+        msg2Web += "," + String(senoFun);
       }
       multi += 5;
       Serial.println(msg2Web);
-      var2Send =0;
-  }
-
-    
-   
     /*
     for (int i = 0; i < TimeSendGraphic; i ++)
     {

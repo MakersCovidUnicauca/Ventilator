@@ -47,9 +47,9 @@ AsyncTask asyncTask3(150, timeoutTH);
 AsyncTask asyncTask5(2000, false, waitConfig);
 
 int TimestoSend = 0;
-AsyncTask asyncTask4(200, true, measurePress);
+AsyncTask asyncTask4(25, true, measurePress);
 #ifdef __DEBG__
-#define TimeSendGraphic 40
+#define TimeSendGraphic 20
 #endif
 #ifdef Graphic_Serial
 #define TimestoPrintSerial 1
@@ -71,7 +71,7 @@ SMInput currentInput;
 // valores por defecto y actualizados por el usuario
 float PIPVal = 28;     //Peak inspiratory pressure
 float PEEPVal = 6;     //presion residual en el sistema despues de la fase de exhalacion
-byte RPMVal = 15;     //respiraciones por minuto
+byte RPMVal = 20;     //respiraciones por minuto
 float VOLVal = 300.0; //Volumen total es la cantidad de aire dado al paciente en un ciclo respiratorio
 byte IEVal = 2;       //proporcion entre el periodo de inhalacion y el periodo de exhalacion
 
@@ -163,8 +163,10 @@ void functInit();
 void updateStateMachine();
 
 //Lcd
+void InitLCDVent();
 void updateDisplay();
 void updateDisplayPressure();
+void refMotorLCD();
 
 void readKey();
 bool checkVal(byte valType, int valValue);
