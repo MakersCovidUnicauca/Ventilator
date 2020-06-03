@@ -12,7 +12,9 @@
 *****************************************************************************/
 #include "Definitions.h"
 
-void readKey1()
+#ifdef TEST_KEY
+
+void readKey()
 {
   String stringKey;
   char customKey = 0; //'\0';
@@ -287,3 +289,5 @@ String checkType(byte valType)
   }
   return stringOne;
 }
+
+#endif

@@ -51,13 +51,13 @@ void loop()
 {
 
   //update menu
-  buttEnc.update();
-  if (change == true){
-    drawMenu();
-    change = false;
-  }
-  readEncoderUpdate();
-  updateMenu();
+  //buttEnc.update();
+  //if (change == true){
+  //  drawMenu();
+  //  change = false;
+  //}
+  // readEncoderUpdate();
+  //updateMenu();
   //////
 
   readInput();

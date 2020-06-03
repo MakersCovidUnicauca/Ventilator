@@ -5,6 +5,8 @@
 
 ///// Keypad
 //////////////////////////////////////////////////
+#ifdef TEST_KEY
+
 #include "Keypad.h"
 const byte ROWS = 4;
 const byte COLS = 3;
@@ -19,6 +21,8 @@ int stateKey = 0;
 int pos = 0;
 char inputCode[4] = {'1', '0', '3', '0'};
 Keypad customKeypad = Keypad(makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS);
+
+#endif
 /////////////////////////////////// Button
 //////////////////////////////////////////////////
 #include <ButtonDebounce.h>

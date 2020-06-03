@@ -46,9 +46,6 @@ void measurePress()
   }
   FlagPressure = true;
 
-#ifdef TEST_LCD
-  updateDisplayPressure();
-#endif
 #ifdef Graphic_Serial
     Serial.print(pInh, 3);
     Serial.print(",");
@@ -293,7 +290,19 @@ void stateConfig()
 {
   if (currentInput == SMInput::BtnConfig)
     changeState(SMState::EXHALE);
+  
+  #ifdef TEST_KEY
   readKey();
+  #endif
+  #ifdef TEST_ENC
+  buttEnc.update();
+  readEncoderUpdate();
+  updateMenu();
+  if (change == true){
+    drawMenu();
+    change = false;
+  }
+  #endif
 }
 
 void stateInhale()
@@ -364,11 +373,16 @@ void functConfig(void)
 {
   DEBUG("CONFIG");
   readVarVent();
+  drawMenu();
+  change = false;
 }
 
 void functInhale(void)
 {
   DEBUG("INHALE");
+#ifdef TEST_LCD
+  updateDisplayPressure();
+#endif
 #ifdef TEST_SENSOR
   pressInhale = pressureTemp;
 #endif
@@ -377,7 +391,6 @@ void functInhale(void)
 
   DistMotor = INITPOSITION;
   VelMotor = float(mPosEnd / ((TIVal / 1000.0)));
-  ;
   AcelMotor = VelMotor * 30;
   SetMotor(DistMotor, VelMotor, AcelMotor);
 #endif

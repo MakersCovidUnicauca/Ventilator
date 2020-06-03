@@ -122,17 +122,25 @@ void updateDisplay(void)
 void updateDisplayPressure()
 {
 
-  char float_str0[4];
-  char float_str1[4];
-  char float_str2[4];
-  char line3[21];
-  dtostrf(pressInhale, 2, 0, float_str0);
-  dtostrf(pressExhale, 2, 0, float_str1);
-  dtostrf(pressPlateau, 2, 0, float_str2);
+  char float_str0[6];
+  char line0[21];
 
-  // Now you can sprintf
-  sprintf(line3, "PI:%-3sPP:%-3sPE:%-4s", float_str0, float_str1, float_str2); // %3s right pads the string
-  //Serial.println (line3);
+  lcd.home();
+  lcd.clear();
+  lcd.print("Operando");
+  lcd.setCursor(0, 1);
+  dtostrf(pressInhale, 2, 2, float_str0);
+  sprintf(line0, "PInhale: %-5s", float_str0); // %3s right pads the string
+  lcd.print(line0);
+
+  lcd.setCursor(0, 2);
+  dtostrf(pressPlateau, 2, 2, float_str0);
+  sprintf(line0, "PPlateau: %-5s", float_str0); // %3s right pads the string
+  lcd.print(line0);
+
   lcd.setCursor(0, 3);
-  lcd.print(line3);
+  dtostrf(pressExhale, 2, 2, float_str0);
+  sprintf(line0, "PExhale: %-5s", float_str0); // %3s right pads the string
+  lcd.print(line0);
+
 }
