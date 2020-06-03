@@ -70,13 +70,13 @@ void measurePress()
   {
     TimestoSend = 0;
 #ifdef __DEBG__
-    DEBUG("PRESSURE");
-    Serial.print("PInh: ");
-    Serial.print(pInh, 3);
-    Serial.print(", PExh: ");
-    Serial.print(pressureTemp, 3);
-    Serial.print(", POxig: ");
-    Serial.println(pOxig, 3);
+    //DEBUG("PRESSURE");
+    //Serial.print("PInh: ");
+    //Serial.print(pInh, 3);
+    //Serial.print(", PExh: ");
+    //Serial.print(pressureTemp, 3);
+    //Serial.print(", POxig: ");
+    //Serial.println(pOxig, 3);
 #endif
   sendGraphicFlag = 1;
   }

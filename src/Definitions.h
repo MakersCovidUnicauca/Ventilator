@@ -13,8 +13,8 @@
 //Websocket
 #include "WebsocketVent.h"
 
-#define Graphic_Serial
-//#define __DEBG__
+//#define Graphic_Serial
+#define __DEBG__
 
 #define TEST_SENSOR
 #define TEST_MOTOR
