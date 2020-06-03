@@ -32,6 +32,11 @@
 //#define BUZZ_ALARM_PIN 6
 #define HALL_SENS_PIN 16 // siempre debe estar
 
+//encoder
+#define ENCODER_DT_PIN  12
+#define ENCODER_SW_PIN  A3
+#define ENCODER_CLK_PIN  11
+
 #endif
 
 #ifdef Arduino_PCB
@@ -58,6 +63,11 @@
 #define BUZZ_ALARM_PIN 8
 #define BTN_CFG_PIN 9
 
+//encoder
+#define ENCODER_DT_PIN  12
+#define ENCODER_SW_PIN  A3
+#define ENCODER_CLK_PIN  11
+
 #endif
 
 #ifdef __Other__
@@ -81,6 +91,12 @@
 #define PRESS_OXIG_PIN A2
 #define PRESS_USR_PIN A1
 #define PRESS_AMBU_PIN A0
+
+//encoder
+#define ENCODER_DT_PIN  12
+#define ENCODER_SW_PIN  A3
+#define ENCODER_CLK_PIN  11
+
 
 #endif
 

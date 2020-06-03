@@ -33,8 +33,7 @@ void buttonChanged(int state){
   DEBUG(stringone);
 }
 //Write the value to the appropriate byte of the EEPROM.
-void storeVarVent()
-{
+void storeVarVent(){
 
   EEPROM.write(addrVarVent, MRK_STR_VAR);
   EEPROM.write(MDTYPE, currentVentMode);
@@ -50,16 +49,14 @@ void storeVarVent()
 
 // read a byte from the current address of the EEPROM
 // It uses a general eeprom library
-void readVarVent()
-{
+void readVarVent(){
 
   byte value = EEPROM.read(addrVarVent);
-  if (value == MRK_STR_VAR)
-  {
+  if(value == MRK_STR_VAR){
     currentVentMode = (VentMode)EEPROM.read(MDTYPE);
     RPMVal = EEPROM.read(RPMTYPE);
     IEVal = EEPROM.read(IETYPE);
-
+    
     PIPVal = EEPROM.read(PIPTYPE);
     PEEPVal = EEPROM.read(PEEPTYPE);
     POVal = EEPROM.read(POTYPE);

@@ -361,6 +361,9 @@ void functInit(void)
   lcd.setCursor(0, 2);
   lcd.print(WiFi.localIP());
   button.setCallback(buttonChanged);
+  //menu
+  buttEnc.setCallback(buttEncChanged);
+  ///
   asyncTask5.Start(); ////Simulation sin btnConfig
   //readVarVent();  ////Simulation sin btnConfig
 }
