@@ -19,12 +19,16 @@ int Pressure::readRaw()
 
 float Pressure::readCmH2O()
 {
-  _sensorValue = analogRead(_pin);
+  uint8_t i;
+  for (i = 0; i < 10; i++)
+    _sensorValue += analogRead(_pin);
+  _sensorValue /= 10;
 #ifdef ESP32_PCB
   _pressVal = (_sensorValue *0.03540)- 17.59445 ;
 #else
-    _pressVal = (_sensorValue *0.10733)- 17.60358 ;
+  _pressVal = (_sensorValue *0.10733)- 17.60358 ;
 #endif
   return _pressVal;
 }
 
+//1 Psi = 70.306957964239 cmH2O

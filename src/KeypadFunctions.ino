@@ -12,7 +12,7 @@
 *****************************************************************************/
 #include "Definitions.h"
 
-void readKey()
+void readKey1()
 {
   String stringKey;
   char customKey = 0; //'\0';

@@ -32,14 +32,9 @@ void measurePress()
 {
   float pInh = 0;
   pressureTemp = 0;
-  for (size_t i = 0; i < 10; i++)
-  {
-    pInh += pressInh.readCmH2O() - offset;
-    pressureTemp += pressExh.readCmH2O() - offset1;
-  }
-  pInh /= 10;
-  pressureTemp /= 10;
-
+  pInh = pressInh.readCmH2O() - offset;
+  pressureTemp = pressExh.readCmH2O() - offset1;
+  
   float pOxig = 0.0;
   if (FlagOxig == true)
   {
@@ -50,9 +45,6 @@ void measurePress()
     }
   }
   FlagPressure = true;
-
-
-
 
 #ifdef TEST_LCD
   updateDisplayPressure();
