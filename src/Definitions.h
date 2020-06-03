@@ -12,6 +12,8 @@
 #include "ModesVentilator.h"
 //Websocket
 #include "WebsocketVent.h"
+//encoder
+#include "MenuDefs.h"
 
 //#define Graphic_Serial
 #define __DEBG__
@@ -87,7 +89,7 @@ byte PMVal = 0;     //Presion maxima que no se puede exceder en los metodos por 
 #define PRTYPE '7'   //55
 #define VOLTYPE '8'  //56
 
-VentMode currentVentMode = CV;
+//VentMode currentVentMode = CV;
 VentMode tempMode = CV;
 
 //limites inferior y superior de variables

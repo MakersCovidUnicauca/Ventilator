@@ -31,7 +31,7 @@ String menuItem7 = "PR";
 String menuItem8 = "VOLUMEN";
 
 String ventMode[4] = { "CV", "CVA", "CP", "CPA" };
-//int currentVentMode  = 0;
+int currentVentMode  = 0;
 
 boolean up = false;
 boolean down = false;
