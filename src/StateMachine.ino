@@ -30,20 +30,35 @@ void timeoutTE()
 
 void measurePress()
 {
+
+//Pressure pressInh(PRESS_AMBU_PIN);
+//Pressure pressExh(PRESS_USR_PIN);
+
   float pInh = 0;
   pressureTemp = 0;
   pInh = pressInh.readCmH2O() - offset;
   pressureTemp = pressExh.readCmH2O() - offset1;
-  
+   
+  if (FlagAire == true)
+  {
+    if(pInh == 0.0){
+      waitAir();
+    }
+  }
+
   float pOxig = 0.0;
   if (FlagOxig == true)
   {
+    if(pInh == 0.0){
+      waitOxyg();
+    }
     pOxig = pressOxig.readCmH2O();
     if (pOxig < PRVal)
     {
       //alarma(AlarmType::OXY);
     }
   }
+
   FlagPressure = true;
 
 #ifdef Graphic_Serial
@@ -206,6 +221,51 @@ void alarma(byte alarm)
   DEBUG(stringAlarm);
 }
 
+void waitOxyg()
+{
+
+    DEBUG("AIRE");
+    //cerrar valvula de oxigeno
+    digitalWrite(VALV_OXIG_PIN, LOW);
+    FlagOxig = false;
+
+    mPosEnd = float(VOLVal / RELMMVOL);
+    DistMotor = INITPOSITION - mPosEnd;
+    // de la posicion final debe regresarse para cargar el volumen requerido
+    float Po = POVal * 0.01; //
+    VelMotor = float(mPosEnd / ((TIVal * (1 - Po)) / 1000.0));
+    AcelMotor = VelMotor * 30;
+    SetMotor(DistMotor, VelMotor, AcelMotor);
+
+    FlagAire = true;
+    digitalWrite(VALV_EXTR_PIN, HIGH);     //cerrar valvula de oxigeno
+    
+#ifdef __DEBG__
+    Serial.print(" DistMotor: ");
+    Serial.print(DistMotor);
+    Serial.print(" mPosEnd: ");
+    Serial.print(mPosEnd);
+    Serial.print(" Po: ");
+    Serial.print(Po);
+    Serial.print(" mPosOxi: ");
+    Serial.print(mPosOxi);
+    Serial.print(" DISTM: ");
+    Serial.print(DistMotor);
+    Serial.print(" VelM: ");
+    Serial.print(VelMotor, 3);
+    Serial.print(" AccelM: ");
+    Serial.println(AcelMotor, 3);
+#endif
+}
+
+void waitAir()
+{
+  DEBUG("END OXY+AIR");
+  //cerrar valvula de aire
+  FlagAire = false;
+  digitalWrite(VALV_EXTR_PIN, LOW);     //cerrar valvula de oxigeno
+}
+
 void calculeVol()
 {
   if ((Motor.isRunning() == 0) && (FlagAire == false))
@@ -336,7 +396,7 @@ void stateExhale()
   if (currentInput == SMInput::BtnReset)
     changeState(SMState::CONFIG);
 #ifdef TEST_MOTOR
-  calculeVol();
+  //calculeVol();
 #endif
 #ifdef TEST_MODE
   MngAssitExh();

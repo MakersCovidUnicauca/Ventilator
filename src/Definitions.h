@@ -22,8 +22,8 @@
 #define TEST_MOTOR
 //#define TEST_LCD
 //#define TEST_MODE
-#define TEST_KEY
-//#define TEST_ENC
+//#define TEST_KEY
+#define TEST_ENC
 
 
 #ifdef __DEBG__
