@@ -34,14 +34,13 @@ void measurePress()
 //Pressure pressInh(PRESS_AMBU_PIN);
 //Pressure pressExh(PRESS_USR_PIN);
 
-  float pInh = 0;
-  pressureTemp = 0;
-  pInh = pressAmbu.readCmH2O() - offset;
-  pressureTemp = pressUser.readCmH2O() - offset1;
+ 
+  pAmbu = pressAmbu.readCmH2O() - offset;
+  pressureUser = pressUser.readCmH2O() - offset1;
    
   if (FlagAire == true)
   {
-    if(pInh == 0.0){
+    if(pAmbu == 0.0){
       waitAir();
     }
   }
@@ -49,7 +48,7 @@ void measurePress()
   float pOxig = 0.0;
   if (FlagOxig == true)
   {
-    if(pInh == 0.0){
+    if(pAmbu == 0.0){
       waitOxyg();
     }
     pOxig = pressOxig.readCmH2O();
@@ -67,7 +66,7 @@ void measurePress()
     Serial.print(GetPosition());
     Serial.println(" ");
 #endif
-  preUser[TimestoSend] = pInh;
+  preUser[TimestoSend] = pAmbu;
   volUser[TimestoSend] = GetPosition();
   TimestoSend++; 
   if (TimestoSend >= TimeSendGraphic)
@@ -91,7 +90,7 @@ void CtrlPressure()
 {
   if (currentVentMode == VentMode::CP)
   {
-    float pInh = pressAmbu.readCmH2O();
+    float pInh = pAmbu;
     if (pInh >= PM_FAB)
     {
       DEBUG("PM_DETEC");
@@ -108,9 +107,9 @@ void MngAssitExh()
 {
   if (FlagPressure)
   {
-    if (pressureTemp < pressExhale)
+    if (pressureUser < pressExhale)
     {
-      pressExhale = pressureTemp;
+      pressExhale = pressureUser;
     }
     if ((currentVentMode == VentMode::CVA) || (currentVentMode == VentMode::CPA))
     {
@@ -132,9 +131,9 @@ void MngAssitInh()
 {
   if (FlagPressure)
   {
-    if (pressureTemp > pressInhale)
+    if (pressureUser > pressInhale)
     {
-      pressInhale = pressureTemp;
+      pressInhale = pressureUser;
     }
     if ((currentVentMode == VentMode::CVA) || (currentVentMode == VentMode::CPA))
     {
@@ -156,9 +155,9 @@ void calculePlateau()
   if (FlagPressure)
   {
     //float pExh = pressExh.readCmH2O();
-    if (pressureTemp != pressPlateau)
+    if (pressureUser != pressPlateau)
     {
-      pressPlateau = pressureTemp;
+      pressPlateau = pressureUser;
     }
     else
     {
@@ -449,7 +448,7 @@ void functInhale(void)
   updateDisplayPressure();
 #endif
 #ifdef TEST_SENSOR
-  pressInhale = pressureTemp;
+  pressInhale = pressureUser;
 #endif
 #ifdef TEST_MOTOR
   FlagAire = false;
@@ -465,7 +464,7 @@ void functPause(void)
 {
   DEBUG("PAUSE");
 #ifdef TEST_SENSOR
-  pressPlateau = pressureTemp;
+  pressPlateau = pressureUser;
   idxPlateau = 0;
 #endif
 }
@@ -491,7 +490,7 @@ void functExhale(void)
     storeVarVent();
   }
 #ifdef TEST_SENSOR
-  pressExhale = pressureTemp;
+  pressExhale = pressureUser;
 #endif
 #ifdef TEST_MOTOR
   calculeOxig();

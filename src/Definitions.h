@@ -142,7 +142,8 @@ Pressure pressUser(PRESS_USR_PIN);
 Pressure pressOxig(PRESS_OXIG_PIN);
 float offset, offset1;
 
-float pressureTemp = 0;
+float pressureUser = 0;
+float pAmbu = 0;
 float pressInhale = 2.3;
 float pressExhale = -3.45;
 float pressPlateau = 4.76;
