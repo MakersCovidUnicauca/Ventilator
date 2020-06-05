@@ -41,6 +41,7 @@ void measurePress()
       DEBUG("END OXY+AIR");
       //cerrar valvula de aire
       FlagAire = false;
+      //calculeOxig();
       //digitalWrite(VALV_EXTR_PIN, LOW);     //cerrar valvula de oxigeno
     }
   }
@@ -50,6 +51,8 @@ void measurePress()
   {
     if(pAmbu == 0.0){
       calculeAir();
+      //digitalWrite(VALV_OXIG_PIN, LOW);
+      //FlagOxig = false;
     }
     float pOxig = pressOxig.readCmH2O();
     if (pOxig < PRVal)
@@ -234,6 +237,8 @@ void calculeAir()
       Vol = VOLVal;
     }
 
+    //mPosEnd = float(((1 - Po) * Vol / 0.79));
+
     mPosEnd = float(Vol / RELMMVOL);
     DistMotor = INITPOSITION - mPosEnd;
     VelMotor = float(mPosEnd / ((TIVal * (1 - Po)) / 1000.0));
@@ -284,6 +289,8 @@ void calculeOxig()
   else{
     Vol = VOLVal;
   }
+
+  //mPosOxi = float(Vol / RELMMVOL);
 
   mPosOxi = Vol - float(((1 - Po) * Vol / 0.79));
   mPosOxi = (mPosOxi / RELMMVOL);
@@ -473,6 +480,7 @@ void functExhale(void)
 #endif
 #ifdef TEST_MOTOR
   calculeOxig();
+  //calculeAir();
 #endif
   //DEBUG("EXHALE1");//30 MILLISECONDS
   asyncTask1.Start();
