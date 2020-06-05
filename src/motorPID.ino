@@ -1,8 +1,10 @@
 
+
+#include "Definitions.h"
 #include <PID_v1.h>
 
 //Define Variables we'll be connecting to
-float Setpoint, Input, Output;
+double Setpoint, Input, Output;
 
 //Define the aggressive and conservative Tuning Parameters
 double aggKp=4, aggKi=0.2, aggKd=1;
@@ -13,7 +15,7 @@ PID myPID(&Input, &Output, &Setpoint, consKp, consKi, consKd, DIRECT);
 
 void InitPID(){
 
-  Setpoint = PM_FAB;
+  Setpoint = PIPVal;
 
   //turn the PID on
   myPID.SetMode(AUTOMATIC);
@@ -29,8 +31,7 @@ void CtrlPressurePID()
 
   if (currentVentMode == VentMode::CP)
   {
-    float pInh = pressInh.readCmH2O();
-    Input = pInh;
+    Input = pAmbu;
 
     double gap = abs(Setpoint-Input); //distance away from setpoint
     if (gap < 10)
