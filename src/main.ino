@@ -18,8 +18,8 @@ void setup()
   Serial.println("Fuelle,Paciente ");
 #endif
 
-  offset = pressInh.readCmH2O();
-  offset1 = pressExh.readCmH2O();
+  offset = pressAmbu.readCmH2O();
+  offset1 = pressUser.readCmH2O();
   //Valvulas
   pinMode(VALV_OXIG_PIN, OUTPUT);
   pinMode(VALV_EXTR_PIN, OUTPUT);

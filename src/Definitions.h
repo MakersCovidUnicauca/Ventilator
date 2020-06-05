@@ -137,8 +137,8 @@ byte valType = 0;
 //////////////////////////////////////////////////
 #include <Pressure.h>
 
-Pressure pressInh(PRESS_AMBU_PIN);
-Pressure pressExh(PRESS_USR_PIN);
+Pressure pressAmbu(PRESS_AMBU_PIN);
+Pressure pressUser(PRESS_USR_PIN);
 Pressure pressOxig(PRESS_OXIG_PIN);
 float offset, offset1;
 

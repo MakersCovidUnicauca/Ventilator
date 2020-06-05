@@ -36,8 +36,8 @@ void measurePress()
 
   float pInh = 0;
   pressureTemp = 0;
-  pInh = pressInh.readCmH2O() - offset;
-  pressureTemp = pressExh.readCmH2O() - offset1;
+  pInh = pressAmbu.readCmH2O() - offset;
+  pressureTemp = pressUser.readCmH2O() - offset1;
    
   if (FlagAire == true)
   {
@@ -91,7 +91,7 @@ void CtrlPressure()
 {
   if (currentVentMode == VentMode::CP)
   {
-    float pInh = pressInh.readCmH2O();
+    float pInh = pressAmbu.readCmH2O();
     if (pInh >= PM_FAB)
     {
       DEBUG("PM_DETEC");
