@@ -54,6 +54,16 @@ void refMotorLCD(){
   lcd.print(WiFi.localIP());
 }
 
+void mainMsg(){
+  lcd.home();
+    lcd.clear();
+    lcd.print("Ventilador ");
+    lcd.setCursor(0, 1);
+    lcd.print("Init ");
+    lcd.setCursor(0, 2);
+    lcd.print(WiFi.localIP());
+}
+
 void updateDisplay(void)
 {
   lcd.clear();

@@ -33,7 +33,7 @@ void buttEncChanged(int state){
   }
   String stringone = "Changed:";
   stringone = stringone + stringBtn;
-  //DEBUG(stringone);
+  DEBUG(stringone);
 }
 
 void updateMenu(){

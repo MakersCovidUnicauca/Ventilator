@@ -33,8 +33,8 @@
 #define HALL_SENS_PIN 16 // siempre debe estar
 
 //encoder
-#define ENCODER_DT_PIN  13
-#define ENCODER_SW_PIN  12
+#define ENCODER_SW_PIN  13
+#define ENCODER_DT_PIN  12
 #define ENCODER_CLK_PIN 14
 
 #endif

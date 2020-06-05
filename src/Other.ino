@@ -10,6 +10,7 @@ void buttonChanged(int state){
   else if((state == LOW) && (currentState == CONFIG) ){
     currentInput = SMInput::BtnConfig;
     stringBtn = "BtnConfig";
+    mainMsg();
   }
   else if((state == LOW) && (currentState == INHALE)){
     currentInput = SMInput::BtnReset;

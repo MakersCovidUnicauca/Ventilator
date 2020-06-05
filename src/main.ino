@@ -20,7 +20,6 @@ void setup()
 
   offset = pressInh.readCmH2O();
   offset1 = pressExh.readCmH2O();
-
   //Valvulas
   pinMode(VALV_OXIG_PIN, OUTPUT);
   pinMode(VALV_EXTR_PIN, OUTPUT);
@@ -30,6 +29,14 @@ void setup()
   pinMode(STEPPER1_STEP_PIN, OUTPUT);
   pinMode(STEPPER1_DIR_PIN, OUTPUT);
   pinMode(STEPPER1_ENA_PIN, OUTPUT);
+  //Encoder
+  pinMode(ENCODER_SW_PIN, INPUT);
+  pinMode(ENCODER_DT_PIN, INPUT);
+  pinMode(ENCODER_CLK_PIN, INPUT);
+  pinMode(27, OUTPUT);
+  pinMode(26, OUTPUT);
+  digitalWrite(27, LOW);     //
+  digitalWrite(26, HIGH);     //c
   //Hall Sensor
   pinMode(HALL_SENS_PIN, INPUT_PULLUP);
   //default values

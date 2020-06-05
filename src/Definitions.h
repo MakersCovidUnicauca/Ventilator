@@ -22,8 +22,8 @@
 #define TEST_MOTOR
 //#define TEST_LCD
 //#define TEST_MODE
-#define TEST_KEY
-//#define TEST_ENC
+//#define TEST_KEY
+#define TEST_ENC
 
 
 #ifdef __DEBG__
@@ -72,7 +72,7 @@ SMInput currentInput;
 // valores por defecto y actualizados por el usuario
 float PIPVal = 28;     //Peak inspiratory pressure
 float PEEPVal = 6;     //presion residual en el sistema despues de la fase de exhalacion
-byte RPMVal = 20;     //respiraciones por minuto
+byte RPMVal = 10;     //respiraciones por minuto
 float VOLVal = 300.0; //Volumen total es la cantidad de aire dado al paciente en un ciclo respiratorio
 byte IEVal = 2;       //proporcion entre el periodo de inhalacion y el periodo de exhalacion
 
@@ -168,6 +168,7 @@ void InitLCDVent();
 void updateDisplay();
 void updateDisplayPressure();
 void refMotorLCD();
+void mainMsg();
 
 void readKey();
 bool checkVal(byte valType, int valValue);

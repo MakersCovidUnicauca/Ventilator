@@ -220,8 +220,8 @@ void calculeVol()
     // de la posicion final debe regresarse para cargar el volumen requerido
     float Po = POVal * 0.01; //
     VelMotor = float(mPosEnd / ((TIVal * (1 - Po)) / 1000.0));
-    AcelMotor = VelMotor * 30;
-    SetMotor(DistMotor, VelMotor, AcelMotor);
+    AcelMotor = VelMotor * 20;
+    //SetMotor(DistMotor, VelMotor, AcelMotor);
 #ifdef __DEBG__
     Serial.print(" DistMotor: ");
     Serial.print(DistMotor);
@@ -256,8 +256,19 @@ void calculeOxig()
   FlagOxig = true;
   DistMotor = INITPOSITION - mPosOxi;
   VelMotor = mPosOxi / ((TIVal * Po) / 1000.0);
-  AcelMotor = VelMotor * 30;
+  AcelMotor = VelMotor * 20;
+
+  //////////////////////////////////////////////
+  /// Calcule Motor
+  mPosEnd = float(VOLVal / RELMMVOL);
+  DistMotor = INITPOSITION - mPosEnd;
+  // de la posicion final debe regresarse para cargar el volumen requerido
+  Po = POVal * 0.01; //
+  VelMotor = float(mPosEnd / ((TIVal * (1 - Po)) / 1000.0));
+  AcelMotor = VelMotor * 20;
   SetMotor(DistMotor, VelMotor, AcelMotor);
+  ////
+  //SetMotor(DistMotor, VelMotor, AcelMotor);
 #ifdef __DEBG__
   Serial.print("VOLRes: ");
   Serial.print(VOLRes);
@@ -354,13 +365,7 @@ void stateExlPas()
 void functInit(void)
 {
   DEBUG("INIT");
-  lcd.home();
-  lcd.clear();
-  lcd.print("Ventilador ");
-  lcd.setCursor(0, 1);
-  lcd.print("Init ");
-  lcd.setCursor(0, 2);
-  lcd.print(WiFi.localIP());
+  mainMsg();
   button.setCallback(buttonChanged);
   //menu
   buttEnc.setCallback(buttEncChanged);
@@ -391,7 +396,7 @@ void functInhale(void)
 
   DistMotor = INITPOSITION;
   VelMotor = float(mPosEnd / ((TIVal / 1000.0)));
-  AcelMotor = VelMotor * 30;
+  AcelMotor = VelMotor * 20;
   SetMotor(DistMotor, VelMotor, AcelMotor);
 #endif
 }
