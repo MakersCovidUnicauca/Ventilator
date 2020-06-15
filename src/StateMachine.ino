@@ -30,6 +30,47 @@ void timeoutTE()
 
 void measurePress()
 {
+  pAmbu = pressAmbu.readCmH2O() - offset;
+  pressureUser = pressUser.readCmH2O() - offset1;
+   
+  if (FlagOxig == true)
+  {
+    float pOxig = pressOxig.readCmH2O();
+    if (pOxig < PRVal)
+    {
+      //alarma(AlarmType::OXY);
+    }
+  }
+  FlagPressure = true;
+
+#ifdef Graphic_Serial
+    Serial.print(pInh, 3);
+    Serial.print(",");
+    Serial.print(GetPosition());
+    Serial.println(" ");
+#endif
+  preUser[TimestoSend] = pAmbu;
+  volUser[TimestoSend] = GetPosition();
+  TimestoSend++; 
+  if (TimestoSend >= TimeSendGraphic)
+  {
+    TimestoSend = 0;
+#ifdef __DEBG__
+    //DEBUG("PRESSURE");
+    //Serial.print("PInh: ");
+    //Serial.print(pInh, 3);
+    //Serial.print(", PExh: ");
+    //Serial.print(pressureTemp, 3);
+    //Serial.print(", POxig: ");
+    //Serial.println(pOxig, 3);
+#endif
+  sendGraphicFlag = 1;
+  }
+}
+
+/*
+void measurePress()
+{
 
   pAmbu = pressAmbu.readCmH2O() - offset;
   pressureUser = pressUser.readCmH2O() - offset1;
@@ -88,6 +129,7 @@ void measurePress()
   }
   
 }
+*/
 
 void CtrlPressure()
 {
@@ -97,8 +139,8 @@ void CtrlPressure()
     {
       DEBUG("PIP_DETEC");
       Motor.stop();
-      asyncTask2.Stop();
-      asyncTask3.Start();
+      //asyncTask2.Stop();
+      //asyncTask3.Start();
       currentInput = SMInput::TIEnd;
     }
   }
@@ -218,6 +260,72 @@ void alarma(byte alarm)
   DEBUG(stringAlarm);
 }
 
+void ctrlValvul(){
+  if(mPosOxi == mPosCurrent){
+    if (FlagOxig == false){
+      //abrir valvula de oxigeno
+      digitalWrite(VALV_OXIG_PIN, HIGH);
+      FlagOxig = true;
+      FlagAire = false;
+    }
+  }
+  else if (mPosEnd == mPosCurrent){
+    if (FlagOxig == true){
+      //cerrar valvula de oxigeno
+      digitalWrite(VALV_OXIG_PIN, LOW);
+      FlagOxig = false;
+      FlagAire = false;
+    }
+  }
+}
+
+void calculePositions()
+{
+    DEBUG("AIRE");
+    float Vol;
+    float Po = POVal * 0.01; //
+    if ((currentVentMode == VentMode::CV) || (currentVentMode == VentMode::CVA))
+    {
+      Vol = VOLVal;
+    }
+    else if ((currentVentMode == VentMode::CP) || (currentVentMode == VentMode::CPA))
+    {
+      Vol = VOLMAX;
+    }
+    else{
+      Vol = VOLVal;
+    }
+
+    mPosOxi = float(((1 - Po) * Vol / 0.79));
+    mPosOxi = (mPosOxi / RELMMVOL);
+
+    mPosEnd = float(Vol / RELMMVOL);
+    DistMotor = INITPOSITION - mPosEnd;
+    VelMotor = float(mPosEnd / ((TEVal * (1 - Po)) / 1000.0));
+    AcelMotor = VelMotor * 20;
+    SetMotor(DistMotor, VelMotor, AcelMotor);
+
+    //cerrar valvula de oxigeno
+    digitalWrite(VALV_OXIG_PIN, LOW);
+    FlagOxig = false;
+    FlagAire = true;
+  
+#ifdef __DEBG__
+    Serial.print(" mPosEnd: ");
+    Serial.print(mPosEnd);
+    Serial.print(" mPosOxi: ");
+    Serial.print(mPosOxi);
+    Serial.print(" DISTM: ");
+    Serial.print(DistMotor);
+    Serial.print(" VelM: ");
+    Serial.print(VelMotor, 3);
+    Serial.print(" AccelM: ");
+    Serial.println(AcelMotor, 3);
+#endif
+
+}
+
+/*
 void calculeAir()
 {
   if ((Motor.isRunning() == 0) && (FlagAire == false))
@@ -238,7 +346,6 @@ void calculeAir()
     }
 
     //mPosEnd = float(((1 - Po) * Vol / 0.79));
-
     mPosEnd = float(Vol / RELMMVOL);
     DistMotor = INITPOSITION - mPosEnd;
     VelMotor = float(mPosEnd / ((TIVal * (1 - Po)) / 1000.0));
@@ -314,6 +421,7 @@ void calculeOxig()
   AcelMotor = VelMotor * 20;
   SetMotor(DistMotor, VelMotor, AcelMotor);
   */
+ /*
 
 #ifdef __DEBG__
   Serial.print("VOLRes: ");
@@ -333,6 +441,8 @@ void calculeOxig()
   Serial.println(AcelMotor, 3);
 #endif
 }
+*/
+
 
 void stateInit()
 {
@@ -393,7 +503,8 @@ void stateExhale()
   if (currentInput == SMInput::BtnReset)
     changeState(SMState::CONFIG);
 #ifdef TEST_MOTOR
-  calculeAir();
+  ctrlValvul();
+  //calculeAir();
 #endif
 #ifdef TEST_MODE
   MngAssitExh();
@@ -417,7 +528,6 @@ void functInit(void)
   buttEnc.setCallback(buttEncChanged);
   ///
   asyncTask5.Start(); ////Simulation sin btnConfig
-  //readVarVent();  ////Simulation sin btnConfig
 }
 
 void functConfig(void)
@@ -480,7 +590,8 @@ void functExhale(void)
   pressExhale = pressureUser;
 #endif
 #ifdef TEST_MOTOR
-  calculeOxig();
+  calculePositions();
+  //calculeOxig();
   //calculeAir();
 #endif
   //DEBUG("EXHALE1");//30 MILLISECONDS
