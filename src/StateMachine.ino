@@ -38,9 +38,9 @@ void measurePress()
   {
     if(pAmbu == 0.0)
     {
-      DEBUG("END OXY+AIR");
+      //DEBUG("END OXY+AIR");
       //cerrar valvula de aire
-      FlagAire = false;
+      //FlagAire = false;
       //calculeOxig();
       //digitalWrite(VALV_EXTR_PIN, LOW);     //cerrar valvula de oxigeno
     }
@@ -50,7 +50,7 @@ void measurePress()
   if (FlagOxig == true)
   {
     if(pAmbu == 0.0){
-      calculeAir();
+      //calculeAir();
       //digitalWrite(VALV_OXIG_PIN, LOW);
       //FlagOxig = false;
     }
@@ -251,6 +251,7 @@ void calculeAir()
     FlagAire = true;
   
 #ifdef __DEBG__
+
     Serial.print(" DistMotor: ");
     Serial.print(DistMotor);
     Serial.print(" mPosEnd: ");
