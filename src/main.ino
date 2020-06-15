@@ -11,9 +11,7 @@ void setup()
   Serial.begin(115200);
   Wire.begin(); // join i2c bus (address optional for master)
   delay(1000);
-  DEBUG("Ventilador");
-  delay(1000);
-  DEBUG("testting");
+  DEBUG("Init Ventilator");
 #ifdef Graphic_Serial
   Serial.println("Fuelle,Paciente ");
 #endif
