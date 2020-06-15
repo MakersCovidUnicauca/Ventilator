@@ -29,6 +29,8 @@ void setup()
   pinMode(STEPPER1_STEP_PIN, OUTPUT);
   pinMode(STEPPER1_DIR_PIN, OUTPUT);
   pinMode(STEPPER1_ENA_PIN, OUTPUT);
+  //directionInvert,stepInvert,enableInvert
+  Motor.setPinsInverted(true, false,false);
   //Encoder
   pinMode(ENCODER_SW_PIN, INPUT);
   pinMode(ENCODER_DT_PIN, INPUT);

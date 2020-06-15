@@ -8,10 +8,10 @@
 
 #include <AccelStepper.h>
 // The X Stepper pins
-#define PulsePerRev 3200
-#define mmPerRev 60
-#define mmPerPulse 0.01875
-#define PulseXmm 53
+#define PulsePerRev 8000
+#define mmPerRev 72
+#define mmPerPulse 0.009
+#define PulseXmm 111.111
 
 #define DelayPulse 220 // millisecond
 #define LONG_FUELLE 60 //milimetros (mm)
