@@ -126,7 +126,7 @@ if (up && page == 1 ) {
   }
   else if (up && page == 2 && menuitem==8 ) {
     up = false;
-    VOLVal--;
+    VOLVal-=5;
     if(VOLVal <= VOLMIN){
       VOLVal = VOLMIN; //
     }
@@ -229,7 +229,7 @@ if (up && page == 1 ) {
   }
   else if (down && page == 2 && menuitem==8 ) {
     down = false;
-    VOLVal++;
+    VOLVal+=5;
     if (VOLVal >= VOLMAX){
       VOLVal = VOLMAX;
     }
