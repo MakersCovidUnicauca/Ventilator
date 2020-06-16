@@ -165,6 +165,8 @@ void updateMotorPos()
     String stringone = "Dist:";
     stringone = stringone + String(dist);
     mPosCurrent = dist;
-    //DEBUG(stringone);
+    if(Motor.isRunning() == 0){
+      DEBUG(stringone);
+      }
   }
 }

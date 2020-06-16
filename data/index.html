@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <meta charset="utf-8" />
-
+<head>
 <title>Ventilador</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 <style>
@@ -29,29 +29,77 @@
     text-align: left;
   }
 </style>
+<style>
+  .grid-container {
+    display: grid;
+    grid-column-gap: 10px;
+    grid-template-columns: 67% 15% 15%;
+    background-color: #2196F3;
+    padding: 10px;
+  }
+  
+  .grid-item {
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    font-size: 30px;
+    text-align: center;
+  }
+  .labels{
+    color: #0a5f23;
+    font-size: 15px;
+    
+  }
+  .label_value{
+    font-size: 20px;
+    font-weight: bold;
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    padding: 10px;
+  }
+  .style_range{
+    width: 70%;
+    margin: 13.8px 0;
+  }
+  </style>
+  </head>
+  <body>
+  
+  <h2>Ventilador Puben</h2>
+  <div class="grid-container">
+    <div class="grid-item"><!--1-->
+        <div>
+           <canvas id="chartpressure" width="800" height="450"></canvas>
+        </div>
+        <div>
+          <canvas id="chartvolume" width="800" height="450"></canvas>
+        </div>
+    </div>
+    <div class="grid-item"><!--2-->
+    <label id = "Modo" class="labels">Modo:         <span class="label_value" id="Mode_value">NA</span> </label><br> 
+    <label id = "PIP"  class="labels">PIP:    <span class="label_value" id="PIP_value">0</span> cmH2o</label><br> 
+        <label id = "PEEP"    class="labels"> PEEP: <span class="label_value" id="PEEP_value">0</span> cmH2O</label><br>
+        <label id = "RPM"     class="labels"> RPM:   <span class="label_value" id="RPM_value">0</span> x min </label><br>
+        <label id = "VOLDATA" class="labels"> VT:    <span class="label_value" id="VT_value">0</span> mL</label><br>
+        <label id = "IEVAL"   class="labels"> IE: <br>  <span class="label_value" id="IE_value">0</span> </label><br>
+    </div>
+    <div class="grid-item"><!--3-->
+      <label id="fio2_label" class="labels">FIO2</label>
+      <input id="range_input" class="style_range" type="range" min="21" max="99" step="2">
+      <label id="range_label" class="labels"></label>   
+    </div>  
+  </div>
+<script>
+document.getElementById('range_input').addEventListener('input',function(){
+  document.getElementById('range_label').innerHTML = this.value;
+  //console.log(this.value);
+});
 
-<h2>Ventilador Puben</h2>
-<h4> Valores Configurados</h4>
-<label id = "Modo"> Vol </label> <br> 
-<label id = "PIP">  30 </label> 
-<label id = "PEEP"> 4 </label>   
-<br> 
-<div>
-<canvas id="chartpressure" width="800" height="450"></canvas>
-</div>
-<br> 
-<label id = "RPM">  0 </label> 
-<label id = "VOLDATA"> 0 </label> 
-<label id = "IEVAL"> 0 </label>     
-<div>
-<canvas id="chartvolume" width="800" height="450"></canvas>
-</div>
-<br> 
-<br> 
+</script>
+
 <script language="javascript" type="text/javascript">
  // Highcharts
 // these are some defaults you can use for customizing your charts
-
+//https://www.w3schools.com/css/tryit.asp?filename=trycss_grid_layout_named
 Chart.defaults.global.responsive = true;
 Chart.defaults.global.animationSteps = 50;
 Chart.defaults.global.tooltipYPadding = 16;
@@ -251,12 +299,12 @@ Chart.defaults.global.pointDotStrokeWidth = 2;
       doSend("EndGraphic");
     }
     if(varVenti[0] == "c"){     
-      document.getElementById('Modo').innerHTML = 'Modo: '+ varVenti[1];
-      document.getElementById('PIP').innerHTML = 'PIP: '+ varVenti[2]+ ' cmH2o';
-      document.getElementById('PEEP').innerHTML = ' PEEP: '+ varVenti[3] + ' cmH2o';
-      document.getElementById('RPM').innerHTML = 'RPM: '+ varVenti[4];
-      document.getElementById('VOLDATA').innerHTML = ' Volumen Tidal: '+ varVenti[5]+ ' mL';
-      document.getElementById('IEVAL').innerHTML = ' IE: 1:'+ varVenti[6] + ' ';
+      document.getElementById('Mode_value').innerHTML = varVenti[1];
+      document.getElementById('PIP_value').innerHTML  = varVenti[2];
+      document.getElementById('PEEP_value').innerHTML = varVenti[3];
+      document.getElementById('RPM_value').innerHTML  = varVenti[4];
+      document.getElementById('VT_value').innerHTML   = varVenti[5];
+      document.getElementById('IE_value').innerHTML   = "1:"+varVenti[6];
       console.log("SamplingTime " + varVenti[7]);
       samplingTime = parseFloat(varVenti[7]);
       InitGrapicVent();
@@ -286,3 +334,4 @@ Chart.defaults.global.pointDotStrokeWidth = 2;
   // Call the init function as soon as the page loads
   window.addEventListener("load", init, false);
 </script>
+</body>

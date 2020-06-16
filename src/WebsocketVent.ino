@@ -111,7 +111,7 @@ void setupGraphics()
       ;
   }
 
-  WiFi.begin(ssid1, password1);
+  WiFi.begin(ssid, password);
   // Wait for connection
   byte counterWifi = 0;
   while (WiFi.status() != WL_CONNECTED) {
@@ -161,7 +161,7 @@ void loopGraphic(){
 }
 void StateGraphicSend(){
       
-      msg2Web = "c, Volumen Controlado";
+      msg2Web = "c, V/C";
       msg2Web += "," + String(PIPVal);   //PIP
       msg2Web += "," + String(PEEPVal);   //PEEP
       msg2Web += "," + String(RPMVal);    //RPM
