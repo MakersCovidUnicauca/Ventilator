@@ -154,6 +154,11 @@ bool FlagOxig = false;
 bool FlagAire = false;
 bool FlagPressure = false;
 
+#define INTERVAL 20000    //20 millisecond
+#define SENS_PRESS 2    //1-2 cmH2O
+unsigned long prevMicros;
+bool flagTime = false;
+
 // Motor
 void refMotor();
 void InitMotor();
