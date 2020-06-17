@@ -49,7 +49,7 @@ void measurePress()
     Serial.print(GetPosition());
     Serial.println(" ");
 #endif
-  preUser[TimestoSend] = pAmbu;
+  preUser[TimestoSend] = pressureUser;
   volUser[TimestoSend] = GetPosition();
   TimestoSend++; 
   if (TimestoSend >= TimeSendGraphic)
@@ -133,15 +133,26 @@ void measurePress()
 
 void CtrlPressure()
 {
-  if (currentVentMode == VentMode::CP)
+  if ((currentVentMode == VentMode::CP) || (currentVentMode == VentMode::CPA))
   {
+    pressureUser = pressUser.readCmH2O() - offset1;
     if (pressureUser >= PIPVal)
     {
-      DEBUG("PIP_DETEC");
-      Motor.stop();
-      //asyncTask2.Stop();
-      //asyncTask3.Start();
-      currentInput = SMInput::TIEnd;
+        if(flagTime == false){
+            prevMicros = micros();
+            flagTime = true;
+        }
+        else{
+            unsigned long currentMicros = micros();
+            if ((unsigned long)(currentMicros - prevMicros) >= INTERVAL)
+            {
+                DEBUG("PIP_DETEC");
+                Motor.stop();
+                //currentInput = SMInput::PICtrl;
+                flagTime = false;
+            //    prevMicros = micros();
+            }
+        }
     }
   }
 }
@@ -284,25 +295,30 @@ void calculePositions()
     DEBUG("AIRE");
     float Vol;
     float Po = POVal * 0.01; //
+    
     if ((currentVentMode == VentMode::CV) || (currentVentMode == VentMode::CVA))
     {
+      //mPosCurrent = INITPOSITION;
       Vol = VOLVal;
     }
     else if ((currentVentMode == VentMode::CP) || (currentVentMode == VentMode::CPA))
     {
-      Vol = VOLMAX;
+      VOLRes = (INITPOSITION - mPosCurrent) * RELMMVOL;
+      Vol = VOLMAX - VOLRes;
     }
     else{
       Vol = VOLVal;
     }
 
     mPosOxi = float(((1 - Po) * Vol / 0.79));
-    mPosOxi = (mPosOxi / RELMMVOL);
-
+    mPosOxi = mPosCurrent - (mPosOxi / RELMMVOL);
+ 
     mPosEnd = float(Vol / RELMMVOL);
-    DistMotor = INITPOSITION - mPosEnd;
+    DistMotor = mPosCurrent - mPosEnd;
     VelMotor = float(mPosEnd / ((TEVal * (1 - Po)) / 1000.0));
     AcelMotor = VelMotor * 20;
+    //mPosEnd = mPosCurrent - mPosEnd;
+    
     SetMotor(DistMotor, VelMotor, AcelMotor);
 
     //cerrar valvula de oxigeno
@@ -311,6 +327,8 @@ void calculePositions()
     FlagAire = true;
   
 #ifdef __DEBG__
+    Serial.print(" mPosCurrent: ");
+    Serial.print(mPosCurrent);
     Serial.print(" mPosEnd: ");
     Serial.print(mPosEnd);
     Serial.print(" mPosOxi: ");
@@ -478,10 +496,11 @@ void stateInhale()
     changeState(SMState::PAUSE);
   if (currentInput == SMInput::BtnReset)
     changeState(SMState::CONFIG);
-
+    
+  CtrlPressure();
 #ifdef TEST_MODE
   CtrlPressure();
-  MngAssitInh();
+  //MngAssitInh();
 #endif
 }
 
@@ -551,7 +570,18 @@ void functInhale(void)
   FlagAire = false;
 
   DistMotor = INITPOSITION;
-  VelMotor = float(mPosEnd / ((TIVal / 1000.0)));
+  if ((currentVentMode == VentMode::CV) || (currentVentMode == VentMode::CVA))
+  {
+    VelMotor = float(mPosEnd / ((TIVal / 1000.0)));
+  }
+  else if ((currentVentMode == VentMode::CP) || (currentVentMode == VentMode::CPA))
+  {
+    VelMotor = float(INITPOSITION / ((TIVal / 1000.0)));
+    //le aumente la distancia se debe aumentar la velocidad
+  }
+  else{
+    VelMotor = float(mPosEnd / ((TIVal / 1000.0)));
+  }
   AcelMotor = VelMotor * 20;
   SetMotor(DistMotor, VelMotor, AcelMotor);
 #endif
@@ -571,6 +601,9 @@ void functExhale(void)
   DEBUG("EXHALE");
   if (currentInput == SMInput::BtnConfig)
   {
+    refMotor();
+    StatusGraphic=1;
+    mPosCurrent = INITPOSITION;
 #ifdef TEST_MODE
     if ((PMVal == 0) && (currentVentMode >= VentMode::CP))
     {
