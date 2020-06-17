@@ -111,11 +111,14 @@ void setupGraphics()
       ;
   }
 
-  WiFi.begin(ssid, password);
+  wifiMulti.addAP("STHEVEN-WF", "07crrl11");
+  wifiMulti.addAP("TIGO-5DAC", "4NJ567301184");
+
+  //WiFi.begin(ssid, password);
   // Wait for connection
   byte counterWifi = 0;
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(100);
+  while (wifiMulti.run() != WL_CONNECTED) {
+    delay(50);
     DEBUG(".");
     counterWifi++;
     if(counterWifi > 200){

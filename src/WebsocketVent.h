@@ -6,12 +6,17 @@
 #include <WebSocketsServer.h>
 
 const char *ssid = "STHEVEN-WF";
-const char *password = "guiruguiru11";
+const char *password = "07crrl11";
 const char *ssid1 = "TIGO-5DAC";
 const char *password1 = "4NJ567301184";
+
+WiFiMulti wifiMulti;
+
 const int dns_port = 53;
 const int http_port = 80;
 const int ws_port = 1337;
+
+
 // Globals
 AsyncWebServer server(80);
 WebSocketsServer webSocket = WebSocketsServer(1337);
