@@ -33,8 +33,8 @@ intended publication of this material.
 #include "Definitions.h"
 
 #define refDistance 70.0
-#define refSpeed 20.0
-#define refAccel 20.0
+#define refSpeed 50.0
+#define refAccel 50.0
 
 void refMotor()
 {
