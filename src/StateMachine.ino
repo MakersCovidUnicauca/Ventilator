@@ -139,19 +139,19 @@ void CtrlPressure()
     if (pressureUser >= PIPVal)
     {
         if(flagTime == false){
-            prevMicros = micros();
-            flagTime = true;
+          prevMicros = micros();
+          flagTime = true;
         }
         else{
-            unsigned long currentMicros = micros();
-            if ((unsigned long)(currentMicros - prevMicros) >= INTERVAL)
-            {
-                DEBUG("PIP_DETEC");
-                Motor.stop();
-                //currentInput = SMInput::PICtrl;
-                flagTime = false;
+          unsigned long currentMicros = micros();
+          if ((unsigned long)(currentMicros - prevMicros) >= INTERVAL)
+          {
+            DEBUG("PIP_DETEC");
+            Motor.stop();
+            //currentInput = SMInput::PICtrl;
+            flagTime = false;
             //    prevMicros = micros();
-            }
+          }
         }
     }
   }
@@ -175,29 +175,6 @@ void MngAssitExh()
         currentInput = SMInput::TEEnd;
       }
     }
-    FlagPressure = false;
-  }
-}
-
-void MngAssitInh()
-{
-  if (FlagPressure)
-  {
-    if (pressureUser > pressInhale)
-    {
-      pressInhale = pressureUser;
-    }
-    if ((currentVentMode == VentMode::CVA) || (currentVentMode == VentMode::CPA))
-    {
-      if (pressInhale >= PLI_FAB)
-      {
-        DEBUG("TI_END");
-        asyncTask2.Stop();
-        asyncTask3.Start();
-        currentInput = SMInput::TIEnd;
-      }
-    }
-    FlagPressure = false;
   }
 }
 
@@ -232,9 +209,9 @@ void calculeTime()
   TEVal = TVal - TIVal;
   TI = TIVal - THVal;
 
-  asyncTask1.SetIntervalMillis(TEVal);
-  asyncTask2.SetIntervalMillis(TI);
-  asyncTask3.SetIntervalMillis(THVal);
+  asyncTaskTE.SetIntervalMillis(TEVal);
+  asyncTaskTI.SetIntervalMillis(TI);
+  asyncTaskTH.SetIntervalMillis(THVal);
 
 #ifdef __DEBG__
   Serial.print("T: ");
@@ -612,7 +589,7 @@ void functExhale(void)
 #endif
     calculeTime();
 #ifdef TEST_SENSOR
-    asyncTask4.Start();
+    asyncTaskPress.Start();
 #endif
 #ifdef TEST_LCD
     updateDisplay();
@@ -628,7 +605,7 @@ void functExhale(void)
   //calculeAir();
 #endif
   //DEBUG("EXHALE1");//30 MILLISECONDS
-  asyncTask1.Start();
+  asyncTaskTE.Start();
 }
 
 void functListen(void)

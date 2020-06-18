@@ -83,9 +83,9 @@ void loop()
 // Actualizacion Tareas de maquina de estados
 void readInput()
 {
-  asyncTask1.Update(asyncTask2);
-  asyncTask2.Update(asyncTask3);
-  asyncTask3.Update(asyncTask1);
-  asyncTask4.Update();
+  asyncTaskTE.Update(asyncTaskTI);
+  asyncTaskTI.Update(asyncTaskTH);
+  asyncTaskTH.Update(asyncTaskTE);
+  asyncTaskPress.Update();
   asyncTask5.Update();
 }

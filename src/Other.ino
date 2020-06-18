@@ -14,17 +14,17 @@ void buttonChanged(int state){
   }
   else if((state == LOW) && (currentState == INHALE)){
     currentInput = SMInput::BtnReset;
-    asyncTask1.Stop();
-    asyncTask2.Stop();
-    asyncTask3.Stop();
+    asyncTaskTE.Stop();
+    asyncTaskTI.Stop();
+    asyncTaskTH.Stop();
     Motor.stop();
     stringBtn = "input_reset";
   }
   else if((state == LOW) && (currentState == EXHALE)){
     currentInput = SMInput::BtnReset;
-    asyncTask1.Stop();
-    asyncTask2.Stop();
-    asyncTask3.Stop();
+    asyncTaskTE.Stop();
+    asyncTaskTI.Stop();
+    asyncTaskTH.Stop();
     Motor.stop();
     stringBtn = "input_reset";
   }
