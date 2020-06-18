@@ -33,8 +33,8 @@ intended publication of this material.
 #include "Definitions.h"
 
 #define refDistance 70.0
-#define refSpeed 50.0
-#define refAccel 50.0
+#define refSpeed 100.0
+#define refAccel 100.0
 
 void refMotor()
 {
@@ -43,11 +43,13 @@ void refMotor()
 
 #ifdef InitSensorEnable
   DEBUG("Searching position ");
+  Motor.setCurrentPosition(10);
+  DEBUG(GetPosition());
   SetMotor(refDistance, refSpeed, refAccel);
   while (digitalRead(HALL_SENS_PIN) != HIGH)
   {
     Motor.run();
-    delay(10);
+    delay(1);
   }
   InitMotor(); //Define 60 position
   DEBUG("Entering back ");

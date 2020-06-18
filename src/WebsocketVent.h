@@ -10,7 +10,7 @@ const char *password = "07crrl11";
 const char *ssid1 = "TIGO-5DAC";
 const char *password1 = "4NJ567301184";
 
-WiFiMulti wifiMulti;
+//WiFiMulti wifiMulti;
 
 const int dns_port = 53;
 const int http_port = 80;

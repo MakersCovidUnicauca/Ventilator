@@ -24,6 +24,7 @@ void onWebSocketEvent(uint8_t client_num,
   // Client has disconnected
   case WStype_DISCONNECTED:
     //Serial.printf("[%u] Disconnected!\n", client_num);
+    DEBUG("Disconeted");
     StateClient = 0;
     break;
 
@@ -91,7 +92,7 @@ void onPageNotFound(AsyncWebServerRequest *request)
   IPAddress remote_ip = request->client()->remoteIP();
   DEBUG("[" + remote_ip.toString() +
                  "] HTTP GET request of " + request->url());
-  request->send(404, "text/plain", "Not found");
+  request->send(404, "text/plain", "Not found Web ");
 }
 
 /***********************************************************
@@ -111,13 +112,14 @@ void setupGraphics()
       ;
   }
 
-  wifiMulti.addAP("STHEVEN-WF", "07crrl11");
-  wifiMulti.addAP("TIGO-5DAC", "4NJ567301184");
+  //wifiMulti.addAP("STHEVEN-WF", "07crrl11");
+  //wifiMulti.addAP("TIGO-5DAC", "4NJ567301184");
 
-  //WiFi.begin(ssid, password);
+  WiFi.begin(ssid1, password1);
   // Wait for connection
   byte counterWifi = 0;
-  while (wifiMulti.run() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED) {
+  //while (wifiMulti.run() != WL_CONNECTED) {  
     delay(50);
     DEBUG(".");
     counterWifi++;
@@ -149,6 +151,7 @@ void loopGraphic(){
   webSocket.loop();
   if(sendGraphicFlag){
     sendGraphicFlag = 0;
+    DEBUG((WiFi.status() == WL_CONNECTED));
     if(StateClient){
       if(StatusGraphic){
         StatusGraphic=0;
@@ -159,12 +162,13 @@ void loopGraphic(){
       }
       webSocket.sendTXT(numClient, msg2Web);
       StateClient = 0;
+      
     }
   }
 }
 void StateGraphicSend(){
       
-      msg2Web = "c, V/C";
+      msg2Web = "c,V/C";
       msg2Web += "," + String(PIPVal);   //PIP
       msg2Web += "," + String(PEEPVal);   //PEEP
       msg2Web += "," + String(RPMVal);    //RPM
@@ -172,6 +176,7 @@ void StateGraphicSend(){
       msg2Web += "," + String(IEVal);     //IE
       dtostrf( 0.025, 1, 3, buff);
       msg2Web += "," + String(buff);
+      DEBUG(msg2Web);
 }
 
 
@@ -181,7 +186,8 @@ void SendGraphics()
     msg2Web = "v";
     for (int i = 0; i < TimeSendGraphic; i ++)
       {
-        msg2Web += "," + String(volUser[i]);
+        int VolumenUser = volUser[i]* RELMMVOL;
+        msg2Web += "," + String(VolumenUser);
       }
     DEBUG(msg2Web);
     webSocket.sendTXT(numClient, msg2Web);
@@ -196,3 +202,25 @@ void SendGraphics()
  
 }
 
+String ModesVentString (int VentMode){
+String value;
+  switch (currentVentMode)
+  {
+  case CV: /* constant-expression */
+   value = "V/C";
+  break;
+  case CP: /* constant-expression */
+   value = "P/C";
+  break;
+  case CVA: /* constant-expression */
+   value = "V/A";
+  break;
+  case CPA: /* constant-expression */
+   value = "P/A";
+  break;
+  default:
+  value = "NA";
+  break;
+  }
+return value;
+}

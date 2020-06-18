@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8" />
 <head>
-<title>Ventilador</title>
+<title>Ventilador v1.0</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 <style>
   body {
@@ -271,7 +271,7 @@ Chart.defaults.global.pointDotStrokeWidth = 2;
         chartV.data.datasets[0].data.push(yValue);
       }
       chartV.update();
-      console.log( chartV.data.datasets[0].data.length);
+      //console.log( chartV.data.datasets[0].data.length);
       doSend("EndGraphic");
       //console.log( chartV.data.labels);
     }
@@ -283,7 +283,7 @@ Chart.defaults.global.pointDotStrokeWidth = 2;
         chartP.data.datasets[0].data.push(yValue);
       }
       chartP.update();
-      console.log( chartP.data.datasets[0].data.length);
+      //console.log( chartP.data.datasets[0].data.length);
       windowGraphic++;
        if(windowGraphic > 19 ){
         //windowGraphic = 0;

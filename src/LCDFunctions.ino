@@ -50,8 +50,7 @@ void refMotorLCD(){
   lcd.print("Ventilador Pube ");
   lcd.setCursor(0, 1);
   lcd.print("ref Motor");
-  lcd.setCursor(0, 2);
-  lcd.print(WiFi.localIP());
+  
 }
 
 void mainMsg(){
