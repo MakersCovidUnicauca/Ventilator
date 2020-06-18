@@ -45,14 +45,14 @@ void timeoutTE();
 void measurePress();
 void waitConfig();
 
-AsyncTask asyncTask1(4500, timeoutTE);
-AsyncTask asyncTask2(1350, timeoutTI);
-AsyncTask asyncTask3(150, timeoutTH);
+AsyncTask asyncTaskTE(4500, timeoutTE);
+AsyncTask asyncTaskTI(1350, timeoutTI);
+AsyncTask asyncTaskTH(150, timeoutTH);
 
 AsyncTask asyncTask5(2000, false, waitConfig);
 
 int TimestoSend = 0;
-AsyncTask asyncTask4(25, true, measurePress);
+AsyncTask asyncTaskPress(25, true, measurePress);
 
 #define TimeSendGraphic 20
 
@@ -153,6 +153,11 @@ float pressOxygen;
 bool FlagOxig = false;
 bool FlagAire = false;
 bool FlagPressure = false;
+
+#define INTERVAL 20000    //20 millisecond
+#define SENS_PRESS 2    //1-2 cmH2O
+unsigned long prevMicros;
+bool flagTime = false;
 
 // Motor
 void refMotor();

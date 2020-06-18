@@ -130,63 +130,29 @@ void measurePress()
   
 }
 */
+void CtrlPressure(){
 
-void CtrlPressure()
-{
-  if (currentVentMode == VentMode::CP)
+  if ((currentVentMode == VentMode::CP) || (currentVentMode == VentMode::CPA))
   {
+    pressureUser = pressUser.readCmH2O() - offset1;
     if (pressureUser >= PIPVal)
     {
-      DEBUG("PIP_DETEC");
-      Motor.stop();
-      //asyncTask2.Stop();
-      //asyncTask3.Start();
-      currentInput = SMInput::TIEnd;
+        if(flagTime == false){
+            prevMicros = micros();
+            flagTime = true;
+        }
+        else{
+            unsigned long currentMicros = micros();
+            if ((unsigned long)(currentMicros - prevMicros) >= INTERVAL)
+            {
+                DEBUG("PIP_DETEC");
+                Motor.stop();
+                currentInput = SMInput::PICtrl;
+                flagTime = false;
+            //    prevMicros = micros();
+            }
+        }
     }
-  }
-}
-
-void MngAssitExh()
-{
-  if (FlagPressure)
-  {
-    if (pressureUser < pressExhale)
-    {
-      pressExhale = pressureUser;
-    }
-    if ((currentVentMode == VentMode::CVA) || (currentVentMode == VentMode::CPA))
-    {
-      if (pressExhale >= PLI_FAB)
-      {
-        DEBUG("PLI_DETEC");
-        asyncTask1.Stop();
-        asyncTask2.Start();
-        currentInput = SMInput::TEEnd;
-      }
-    }
-    FlagPressure = false;
-  }
-}
-
-void MngAssitInh()
-{
-  if (FlagPressure)
-  {
-    if (pressureUser > pressInhale)
-    {
-      pressInhale = pressureUser;
-    }
-    if ((currentVentMode == VentMode::CVA) || (currentVentMode == VentMode::CPA))
-    {
-      if (pressInhale >= PLI_FAB)
-      {
-        DEBUG("TI_END");
-        asyncTask2.Stop();
-        asyncTask3.Start();
-        currentInput = SMInput::TIEnd;
-      }
-    }
-    FlagPressure = false;
   }
 }
 
@@ -221,9 +187,9 @@ void calculeTime()
   TEVal = TVal - TIVal;
   TI = TIVal - THVal;
 
-  asyncTask1.SetIntervalMillis(TEVal);
-  asyncTask2.SetIntervalMillis(TI);
-  asyncTask3.SetIntervalMillis(THVal);
+  asyncTaskTE.SetIntervalMillis(TEVal);
+  asyncTaskTI.SetIntervalMillis(TI);
+  asyncTaskTH.SetIntervalMillis(THVal);
 
 #ifdef __DEBG__
   Serial.print("T: ");
@@ -284,21 +250,24 @@ void calculePositions()
     DEBUG("AIRE");
     float Vol;
     float Po = POVal * 0.01; //
+    mPosCurrent = INITPOSITION;
+
     if ((currentVentMode == VentMode::CV) || (currentVentMode == VentMode::CVA))
     {
       Vol = VOLVal;
     }
     else if ((currentVentMode == VentMode::CP) || (currentVentMode == VentMode::CPA))
     {
-      Vol = VOLMAX;
+      VOLRes = (INITPOSITION - mPosCurrent) * RELMMVOL;
+      Vol = VOLMAX - VOLRes;
     }
     else{
       Vol = VOLVal;
     }
 
     mPosOxi = float(((1 - Po) * Vol / 0.79));
-    mPosOxi = (mPosOxi / RELMMVOL);
-
+    mPosOxi = mPosCurrent - (mPosOxi / RELMMVOL);
+ 
     mPosEnd = float(Vol / RELMMVOL);
     DistMotor = INITPOSITION - mPosEnd;
     VelMotor = float(mPosEnd / ((TEVal * (1 - Po)) / 1000.0));
@@ -571,6 +540,8 @@ void functExhale(void)
   DEBUG("EXHALE");
   if (currentInput == SMInput::BtnConfig)
   {
+    refMotor();
+    mPosCurrent = INITPOSITION;
 #ifdef TEST_MODE
     if ((PMVal == 0) && (currentVentMode >= VentMode::CP))
     {
@@ -579,7 +550,7 @@ void functExhale(void)
 #endif
     calculeTime();
 #ifdef TEST_SENSOR
-    asyncTask4.Start();
+    asyncTaskPress.Start();
 #endif
 #ifdef TEST_LCD
     updateDisplay();
@@ -595,7 +566,7 @@ void functExhale(void)
   //calculeAir();
 #endif
   //DEBUG("EXHALE1");//30 MILLISECONDS
-  asyncTask1.Start();
+  asyncTaskTE.Start();
 }
 
 void functListen(void)
