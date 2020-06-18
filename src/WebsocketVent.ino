@@ -115,7 +115,7 @@ void setupGraphics()
   //wifiMulti.addAP("STHEVEN-WF", "07crrl11");
   //wifiMulti.addAP("TIGO-5DAC", "4NJ567301184");
 
-  WiFi.begin(ssid1, password1);
+  WiFi.begin(ssid, password);
   // Wait for connection
   byte counterWifi = 0;
   while (WiFi.status() != WL_CONNECTED) {
@@ -168,7 +168,7 @@ void loopGraphic(){
 }
 void StateGraphicSend(){
       
-      msg2Web = "c,V/C";
+      msg2Web = "c,"+ ModesVentString();
       msg2Web += "," + String(PIPVal);   //PIP
       msg2Web += "," + String(PEEPVal);   //PEEP
       msg2Web += "," + String(RPMVal);    //RPM
@@ -202,25 +202,25 @@ void SendGraphics()
  
 }
 
-String ModesVentString (int VentMode){
-String value;
+String ModesVentString(){
+String valueMode = "N/A";
   switch (currentVentMode)
   {
   case CV: /* constant-expression */
-   value = "V/C";
+   valueMode = "V/C";
   break;
   case CP: /* constant-expression */
-   value = "P/C";
+   valueMode = "P/C";
   break;
   case CVA: /* constant-expression */
-   value = "V/A";
+   valueMode = "V/A";
   break;
   case CPA: /* constant-expression */
-   value = "P/A";
+   valueMode = "P/A";
   break;
   default:
-  value = "NA";
+  valueMode = "NA";
   break;
   }
-return value;
+return valueMode;
 }
