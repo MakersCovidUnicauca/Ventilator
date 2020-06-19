@@ -49,4 +49,6 @@ enum SMInput
   BtnReset
 };
 
+void calculePressIns();
+
 #endif

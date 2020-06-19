@@ -1,5 +1,6 @@
 #include "Definitions.h"
 
+/*
 // Funcion que cambia el estado y dispara las transiciones
 void readInputModeVent()
 {
@@ -37,6 +38,7 @@ void readInputModeVent()
     break;
   }
 }
+*/
 
 void CtrlPIP()
 {
@@ -90,7 +92,6 @@ void CtrlVol()
 }
 
 
-
 void CtrlPEEP()
 {
     pressureUser = pressUser.readCmH2O() - offset1;
@@ -140,17 +141,43 @@ void MngAssitExh()
   if ((currentVentMode == VentMode::CVA) || (currentVentMode == VentMode::CPA))
   {
     pressureUser = pressUser.readCmH2O() - offset1;
-    if (pressureUser < pressExhale)
+    if (pressureUser <= (PEEPVal - SENS_PRESS))
     {
-        pressExhale = pressureUser;
+      if(flagTime == false){
+        prevMicros = micros();
+        flagTime = true;
+      }
+      else{
+        unsigned long currentMicros = micros();
+        if ((unsigned long)(currentMicros - prevMicros) >= INTERVAL)
+        {
+          DEBUG("ASSIT_EXH");
+          if(!((FlagOxig == false) && (FlagAire == false))){
+            Motor.stop();
+          }
+          asyncTaskTE.Stop();
+          //TEVal = asyncTaskTE.GetElapsedTime();
+          asyncTaskTI.Start();
+          currentInput = SMInput::TEEnd;
+          flagTime = false;
+        //    prevMicros = micros();
+        }
+      }
     }
-    if (pressExhale >= (PEEPVal - SENS_PRESS))
+  }
+}
+
+
+void calculePressIns()
+{
+  if (FlagPressure)
+  {
+    pressureUser = pressUser.readCmH2O() - offset1;
+    if (pressureUser >= pressInhale)
     {
-        DEBUG("PLI_DETEC");
-        asyncTaskTE.Stop();
-        asyncTaskTI.Start();
-        currentInput = SMInput::TEEnd;
+      pressInhale = pressureUser;
     }
+    FlagPressure = false;
   }
 }
 
@@ -160,19 +187,68 @@ void MngAssitInh()
   if ((currentVentMode == VentMode::CVA) || (currentVentMode == VentMode::CPA))
   {
     pressureUser = pressUser.readCmH2O() - offset1;
-    if (pressureUser > pressInhale)
+    if (pressureUser <= (pressInhale - SENS_PRESS))
     {
-      pressInhale = pressureUser;
-    }
-    if (pressInhale >= (PIPVal - SENS_PRESS))
-    {
-        DEBUG("TI_END");
-        asyncTaskTI.Stop();
-        asyncTaskTH.Start();
-        currentInput = SMInput::TIEnd;
+      if(flagTime == false){
+        prevMicros = micros();
+        flagTime = true;
+      }
+      else{
+        unsigned long currentMicros = micros();
+        if ((unsigned long)(currentMicros - prevMicros) >= INTERVAL)
+        {
+          DEBUG("ASSIT_INH");
+          if(!((currentInput == SMInput::VolCtrl) || (currentInput == SMInput::PICtrl))){
+            Motor.stop();
+          }
+          asyncTaskTI.Stop();
+          //TIVal = asyncTaskTI.GetElapsedTime();
+          asyncTaskTH.Start();
+          currentInput = SMInput::TIEnd;
+          flagTime = false;
+        //    prevMicros = micros();
+        }
+      }
     }
   }
 }
+
+
+//if (mPosCurrent >= mPosVol)
+//pressureUser = pressUser.readCmH2O() - offset1;
+//    if (pressureUser >= PIPVal)
+
+void MngEspInh()
+{
+  if ((currentVentMode == VentMode::CVS) || (currentVentMode == VentMode::CPS))
+  {
+    pressureUser = pressUser.readCmH2O() - offset1;
+    if (pressureUser <= (pressInhale - SENS_PRESS))
+    {
+      if(flagTime == false){
+        prevMicros = micros();
+        flagTime = true;
+      }
+      else{
+        unsigned long currentMicros = micros();
+        if ((unsigned long)(currentMicros - prevMicros) >= INTERVAL)
+        {
+          DEBUG("ASSIT_INH");
+          if(!((currentInput == SMInput::VolCtrl) || (currentInput == SMInput::PICtrl))){
+            Motor.stop();
+          }
+          asyncTaskTI.Stop();
+          TIVal = asyncTaskTI.GetElapsedTime();
+          asyncTaskTH.Start();
+          currentInput = SMInput::TIEnd;
+          flagTime = false;
+        //    prevMicros = micros();
+        }
+      }
+    }
+  }
+}
+
 
 void functInhaleCV(void)
 {

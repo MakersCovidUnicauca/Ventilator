@@ -72,7 +72,7 @@ void calculePlateau()
 {
   if (FlagPressure)
   {
-    //float pExh = pressExh.readCmH2O();
+    pressureUser = pressUser.readCmH2O() - offset1;
     if (pressureUser != pressPlateau)
     {
       pressPlateau = pressureUser;
@@ -244,11 +244,12 @@ void stateInhale()
     changeState(SMState::PAUSE);
   if (currentInput == SMInput::BtnReset)
     changeState(SMState::CONFIG);
+  calculePressIns();
   CtrlVol();
   CtrlPIP();
-#ifdef TEST_MODE
+//#ifdef TEST_MODE
   MngAssitInh();
-#endif
+//#endif
 }
 
 void statePause()
@@ -271,9 +272,9 @@ void stateExhale()
 #ifdef TEST_MOTOR
   ctrlValvul();
 #endif
-#ifdef TEST_MODE
+//#ifdef TEST_MODE
   MngAssitExh();
-#endif
+//#endif
 }
 
 void stateListen()
@@ -310,6 +311,7 @@ void functInhale(void)
   updateDisplayPressure();
 #endif
 #ifdef TEST_SENSOR
+  pressureUser = pressUser.readCmH2O() - offset1;
   pressInhale = pressureUser;
 #endif
 #ifdef TEST_MOTOR
@@ -336,6 +338,7 @@ void functPause(void)
 {
   DEBUG("PAUSE");
 #ifdef TEST_SENSOR
+  pressureUser = pressUser.readCmH2O() - offset1;
   pressPlateau = pressureUser;
   idxPlateau = 0;
 #endif
