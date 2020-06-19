@@ -56,17 +56,6 @@ void setup()
 
 void loop()
 {
-
-  //update menu
-  //buttEnc.update();
-  //if (change == true){
-  //  drawMenu();
-  //  change = false;
-  //}
-  // readEncoderUpdate();
-  //updateMenu();
-  //////
-
   readInput();
   // Tareas maquina de estados
   updateStateMachine();

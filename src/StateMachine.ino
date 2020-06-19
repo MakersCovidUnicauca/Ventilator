@@ -68,116 +68,6 @@ void measurePress()
   }
 }
 
-/*
-void measurePress()
-{
-
-  pAmbu = pressAmbu.readCmH2O() - offset;
-  pressureUser = pressUser.readCmH2O() - offset1;
-   
-  if (FlagAire == true)
-  {
-    if(pAmbu == 0.0)
-    {
-      //DEBUG("END OXY+AIR");
-      //cerrar valvula de aire
-      //FlagAire = false;
-      //calculeOxig();
-      //digitalWrite(VALV_EXTR_PIN, LOW);     //cerrar valvula de oxigeno
-    }
-  }
-
-
-  if (FlagOxig == true)
-  {
-    if(pAmbu == 0.0){
-      //calculeAir();
-      //digitalWrite(VALV_OXIG_PIN, LOW);
-      //FlagOxig = false;
-    }
-    float pOxig = pressOxig.readCmH2O();
-    if (pOxig < PRVal)
-    {
-      //alarma(AlarmType::OXY);
-    }
-  }
-
-  FlagPressure = true;
-
-#ifdef Graphic_Serial
-    Serial.print(pInh, 3);
-    Serial.print(",");
-    Serial.print(GetPosition());
-    Serial.println(" ");
-#endif
-  preUser[TimestoSend] = pAmbu;
-  volUser[TimestoSend] = GetPosition();
-  TimestoSend++; 
-  if (TimestoSend >= TimeSendGraphic)
-  {
-    TimestoSend = 0;
-#ifdef __DEBG__
-    //DEBUG("PRESSURE");
-    //Serial.print("PInh: ");
-    //Serial.print(pInh, 3);
-    //Serial.print(", PExh: ");
-    //Serial.print(pressureTemp, 3);
-    //Serial.print(", POxig: ");
-    //Serial.println(pOxig, 3);
-#endif
-  sendGraphicFlag = 1;
-  }
-  
-}
-*/
-
-void CtrlPressure()
-{
-  if ((currentVentMode == VentMode::CP) || (currentVentMode == VentMode::CPA))
-  {
-    pressureUser = pressUser.readCmH2O() - offset1;
-    if (pressureUser >= PIPVal)
-    {
-        if(flagTime == false){
-          prevMicros = micros();
-          flagTime = true;
-        }
-        else{
-          unsigned long currentMicros = micros();
-          if ((unsigned long)(currentMicros - prevMicros) >= INTERVAL)
-          {
-            DEBUG("PIP_DETEC");
-            Motor.stop();
-            //currentInput = SMInput::PICtrl;
-            flagTime = false;
-            //    prevMicros = micros();
-          }
-        }
-    }
-  }
-}
-
-void MngAssitExh()
-{
-  if (FlagPressure)
-  {
-    if (pressureUser < pressExhale)
-    {
-      pressExhale = pressureUser;
-    }
-    if ((currentVentMode == VentMode::CVA) || (currentVentMode == VentMode::CPA))
-    {
-      if (pressExhale >= PLI_FAB)
-      {
-        DEBUG("PLI_DETEC");
-        asyncTask1.Stop();
-        asyncTask2.Start();
-        currentInput = SMInput::TEEnd;
-      }
-    }
-  }
-}
-
 void calculePlateau()
 {
   if (FlagPressure)
@@ -294,8 +184,6 @@ void calculePositions()
     DistMotor = mPosCurrent - mPosEnd;
     VelMotor = float(mPosEnd / ((TEVal * (1 - Po)) / 1000.0));
     AcelMotor = VelMotor * 20;
-    //mPosEnd = mPosCurrent - mPosEnd;
-    
     SetMotor(DistMotor, VelMotor, AcelMotor);
 
     //cerrar valvula de oxigeno
@@ -319,125 +207,6 @@ void calculePositions()
 #endif
 
 }
-
-/*
-void calculeAir()
-{
-  if ((Motor.isRunning() == 0) && (FlagAire == false))
-  {
-    DEBUG("AIRE");
-    float Vol;
-    float Po = POVal * 0.01; //
-    if ((currentVentMode == VentMode::CV) || (currentVentMode == VentMode::CVA))
-    {
-      Vol = VOLVal;
-    }
-    else if ((currentVentMode == VentMode::CP) || (currentVentMode == VentMode::CPA))
-    {
-      Vol = VOLMAX;
-    }
-    else{
-      Vol = VOLVal;
-    }
-
-    //mPosEnd = float(((1 - Po) * Vol / 0.79));
-    mPosEnd = float(Vol / RELMMVOL);
-    DistMotor = INITPOSITION - mPosEnd;
-    VelMotor = float(mPosEnd / ((TIVal * (1 - Po)) / 1000.0));
-    AcelMotor = VelMotor * 20;
-    SetMotor(DistMotor, VelMotor, AcelMotor);
-
-    //cerrar valvula de oxigeno
-    digitalWrite(VALV_OXIG_PIN, LOW);
-    FlagOxig = false;
-    FlagAire = true;
-  
-#ifdef __DEBG__
-
-    Serial.print(" DistMotor: ");
-    Serial.print(DistMotor);
-    Serial.print(" mPosEnd: ");
-    Serial.print(mPosEnd);
-    Serial.print(" Po: ");
-    Serial.print(Po);
-    Serial.print(" mPosOxi: ");
-    Serial.print(mPosOxi);
-    Serial.print(" DISTM: ");
-    Serial.print(DistMotor);
-    Serial.print(" VelM: ");
-    Serial.print(VelMotor, 3);
-    Serial.print(" AccelM: ");
-    Serial.println(AcelMotor, 3);
-#endif
-  }
-}
-
-void calculeOxig()
-{
-
-  DEBUG("OXYGENO");
-  float Vol;
-  float Po = POVal * 0.01; //
-
-  if ((currentVentMode == VentMode::CV) || (currentVentMode == VentMode::CVA))
-  {
-    VOLRes = (mPosCurrent - INITPOSITION) * RELMMVOL;
-    VOLRes = 0;
-    Vol = VOLVal - VOLRes;
-  }
-  else if ((currentVentMode == VentMode::CP) || (currentVentMode == VentMode::CPA))
-  {
-    Vol = VOLMAX;
-  }
-  else{
-    Vol = VOLVal;
-  }
-
-  //mPosOxi = float(Vol / RELMMVOL);
-
-  mPosOxi = Vol - float(((1 - Po) * Vol / 0.79));
-  mPosOxi = (mPosOxi / RELMMVOL);
-  DistMotor = INITPOSITION - mPosOxi;
-  //VelMotor = mPosOxi / ((TIVal * Po) / 1000.0);
-  VelMotor = mPosOxi / (TIVal / 1000.0);
-  AcelMotor = VelMotor * 20;
-  SetMotor(DistMotor, VelMotor, AcelMotor);
-
-  //abrir valvula de oxigeno
-  digitalWrite(VALV_OXIG_PIN, HIGH);
-  FlagOxig = true;
- 
-  /////////////////test motor sin oxigeno/////////////////////////////
-  /*
-  mPosEnd = float(VOLVal / RELMMVOL);
-  DistMotor = INITPOSITION - mPosEnd;
-  Po = POVal * 0.01; //
-  VelMotor = float(mPosEnd / ((TIVal * (1 - Po)) / 1000.0));
-  AcelMotor = VelMotor * 20;
-  SetMotor(DistMotor, VelMotor, AcelMotor);
-  */
- /*
-
-#ifdef __DEBG__
-  Serial.print("VOLRes: ");
-  Serial.print(VOLRes);
-  Serial.print(" Vol: ");
-  Serial.print(Vol);
-  Serial.print(" Po: ");
-  Serial.print(Po);
-  Serial.print(" mPosOxi: ");
-  Serial.print(mPosOxi);
-
-  Serial.print(" DISTM: ");
-  Serial.print(DistMotor);
-  Serial.print(" VelM: ");
-  Serial.print(VelMotor, 3);
-  Serial.print(" AccelM: ");
-  Serial.println(AcelMotor, 3);
-#endif
-}
-*/
-
 
 void stateInit()
 {
@@ -474,10 +243,9 @@ void stateInhale()
   if (currentInput == SMInput::BtnReset)
     changeState(SMState::CONFIG);
     
-  CtrlPressure();
+  CtrlPIP();
 #ifdef TEST_MODE
-  CtrlPressure();
-  //MngAssitInh();
+  MngAssitInh();
 #endif
 }
 
@@ -500,7 +268,6 @@ void stateExhale()
     changeState(SMState::CONFIG);
 #ifdef TEST_MOTOR
   ctrlValvul();
-  //calculeAir();
 #endif
 #ifdef TEST_MODE
   MngAssitExh();
@@ -554,7 +321,6 @@ void functInhale(void)
   else if ((currentVentMode == VentMode::CP) || (currentVentMode == VentMode::CPA))
   {
     VelMotor = float(INITPOSITION / ((TIVal / 1000.0)));
-    //le aumente la distancia se debe aumentar la velocidad
   }
   else{
     VelMotor = float(mPosEnd / ((TIVal / 1000.0)));
@@ -601,8 +367,6 @@ void functExhale(void)
 #endif
 #ifdef TEST_MOTOR
   calculePositions();
-  //calculeOxig();
-  //calculeAir();
 #endif
   //DEBUG("EXHALE1");//30 MILLISECONDS
   asyncTaskTE.Start();

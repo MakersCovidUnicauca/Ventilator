@@ -114,9 +114,7 @@ const byte PRMIN = 1;  //presion del regulador de el tanque de oxigeno,
 const byte PRMAX = 55; //
 
 const byte PM_FAB = 60;  //Presion maxima que no se puede exceder en los metodos por presion
-const byte PLI_FAB = 40; //Presion Limite Inhalacion
-
-
+//const byte PLI_FAB = 40; //Presion Limite Inhalacion
 
 // valores calculados en milliseconds
 uint16_t TVal = 0;  //The length of time (in seconds) of an inhale/exhale cycle

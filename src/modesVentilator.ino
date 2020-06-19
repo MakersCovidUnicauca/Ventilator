@@ -40,29 +40,33 @@ void readInputModeVent()
 
 void CtrlPIP()
 {
+  if ((currentVentMode == VentMode::CP) || (currentVentMode == VentMode::CPA))
+  {
+    pressureUser = pressUser.readCmH2O() - offset1;
     if (pressureUser >= PIPVal)
     {
         if(flagTime == false){
-            prevMicros = micros();
-            flagTime = true;
+          prevMicros = micros();
+          flagTime = true;
         }
         else{
-            unsigned long currentMicros = micros();
-            if ((unsigned long)(currentMicros - prevMicros) >= INTERVAL)
-            {
-                DEBUG("PIP_DETEC");
-                Motor.stop();
-                mPosCurrent
-                currentInput = SMInput::PICtrl;
-                flagTime = false;
+          unsigned long currentMicros = micros();
+          if ((unsigned long)(currentMicros - prevMicros) >= INTERVAL)
+          {
+            DEBUG("PIP_DETEC");
+            Motor.stop();
+            currentInput = SMInput::PICtrl;
+            flagTime = false;
             //    prevMicros = micros();
-            }
+          }
         }
     }
+  }
 }
 
 void CtrlPEEP()
 {
+    pressureUser = pressUser.readCmH2O() - offset1;
     if (pressureUser < (PEEPVal - SENS_PRESS))
     {
         if(flagTime == false){
@@ -84,6 +88,7 @@ void CtrlPEEP()
 
 void CtrlPP()
 {
+    pressureUser = pressUser.readCmH2O() - offset1;
     if (pressureUser < (pressPlateau - SENS_PRESS))
     {
         if(flagTime == false){
@@ -105,21 +110,29 @@ void CtrlPP()
 
 void MngAssitExh()
 {
+  if ((currentVentMode == VentMode::CVA) || (currentVentMode == VentMode::CPA))
+  {
+    pressureUser = pressUser.readCmH2O() - offset1;
     if (pressureUser < pressExhale)
     {
         pressExhale = pressureUser;
     }
-    if (pressExhale >= PLI_FAB)
+    if (pressExhale >= (PEEPVal - SENS_PRESS))
     {
         DEBUG("PLI_DETEC");
         asyncTaskTE.Stop();
         asyncTaskTI.Start();
         currentInput = SMInput::TEEnd;
     }
+  }
 }
+
 
 void MngAssitInh()
 {
+  if ((currentVentMode == VentMode::CVA) || (currentVentMode == VentMode::CPA))
+  {
+    pressureUser = pressUser.readCmH2O() - offset1;
     if (pressureUser > pressInhale)
     {
       pressInhale = pressureUser;
@@ -131,4 +144,5 @@ void MngAssitInh()
         asyncTaskTH.Start();
         currentInput = SMInput::TIEnd;
     }
+  }
 }
