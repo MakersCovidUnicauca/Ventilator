@@ -147,7 +147,7 @@ void ctrlValvul(){
       FlagAire = false;
     }
   }
-  else if (mPosEnd == mPosCurrent){
+  else if (mPosCurrent == mPosInit){
     if (FlagOxig == true){
       //cerrar valvula de oxigeno
       digitalWrite(VALV_OXIG_PIN, LOW);
@@ -165,8 +165,10 @@ void calculePositions()
     
     if ((currentVentMode == VentMode::CV) || (currentVentMode == VentMode::CVA))
     {
-      //mPosCurrent = INITPOSITION;
-      Vol = VOLVal;
+      mPosVol = float(VOLVal / RELMMVOL);
+      //mPosVol = INITPOSITION - mPosVol;
+      VOLRes = (INITPOSITION - mPosCurrent) * RELMMVOL;
+      Vol = VOLMAX - VOLRes;
     }
     else if ((currentVentMode == VentMode::CP) || (currentVentMode == VentMode::CPA))
     {
@@ -242,7 +244,7 @@ void stateInhale()
     changeState(SMState::PAUSE);
   if (currentInput == SMInput::BtnReset)
     changeState(SMState::CONFIG);
-    
+  CtrlVol();
   CtrlPIP();
 #ifdef TEST_MODE
   MngAssitInh();
@@ -316,7 +318,7 @@ void functInhale(void)
   DistMotor = INITPOSITION;
   if ((currentVentMode == VentMode::CV) || (currentVentMode == VentMode::CVA))
   {
-    VelMotor = float(mPosEnd / ((TIVal / 1000.0)));
+    VelMotor = float(mPosVol / ((TIVal / 1000.0)));
   }
   else if ((currentVentMode == VentMode::CP) || (currentVentMode == VentMode::CPA))
   {

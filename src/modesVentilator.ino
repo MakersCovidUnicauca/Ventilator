@@ -64,6 +64,33 @@ void CtrlPIP()
   }
 }
 
+void CtrlVol()
+{
+  if ((currentVentMode == VentMode::CV) || (currentVentMode == VentMode::CVA))
+  {
+    if (mPosCurrent >= mPosVol)
+    {
+        if(flagTime == false){
+          prevMicros = micros();
+          flagTime = true;
+        }
+        else{
+          unsigned long currentMicros = micros();
+          if ((unsigned long)(currentMicros - prevMicros) >= INTERVAL)
+          {
+            DEBUG("VOL_DETEC");
+            Motor.stop();
+            currentInput = SMInput::VolCtrl;
+            flagTime = false;
+            //    prevMicros = micros();
+          }
+        }
+    }
+  }
+}
+
+
+
 void CtrlPEEP()
 {
     pressureUser = pressUser.readCmH2O() - offset1;
@@ -137,7 +164,7 @@ void MngAssitInh()
     {
       pressInhale = pressureUser;
     }
-    if (pressInhale >= PLI_FAB)
+    if (pressInhale >= (PIPVal - SENS_PRESS))
     {
         DEBUG("TI_END");
         asyncTaskTI.Stop();
@@ -146,3 +173,55 @@ void MngAssitInh()
     }
   }
 }
+
+void functInhaleCV(void)
+{
+  DEBUG("INHALE");
+#ifdef TEST_LCD
+  updateDisplayPressure();
+#endif
+#ifdef TEST_SENSOR
+  pressInhale = pressureUser;
+#endif
+#ifdef TEST_MOTOR
+  FlagAire = false;
+  DistMotor = INITPOSITION;
+  VelMotor = float(mPosEnd / ((TIVal / 1000.0)));
+  AcelMotor = VelMotor * 20;
+  SetMotor(DistMotor, VelMotor, AcelMotor);
+#endif
+}
+
+void functExhaleCV(void)
+{
+  DEBUG("EXHALE");
+  if (currentInput == SMInput::BtnConfig)
+  {
+    refMotor();
+    StatusGraphic=1;
+    mPosCurrent = INITPOSITION;
+#ifdef TEST_MODE
+    if ((PMVal == 0) && (currentVentMode >= VentMode::CP))
+    {
+      currentVentMode = VentMode::CV;
+    }
+#endif
+    calculeTime();
+#ifdef TEST_SENSOR
+    asyncTaskPress.Start();
+#endif
+#ifdef TEST_LCD
+    updateDisplay();
+#endif
+    storeVarVent();
+  }
+#ifdef TEST_SENSOR
+  pressExhale = pressureUser;
+#endif
+#ifdef TEST_MOTOR
+  calculePositions();
+#endif
+  //DEBUG("EXHALE1");//30 MILLISECONDS
+  asyncTaskTE.Start();
+}
+

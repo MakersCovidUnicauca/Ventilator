@@ -21,6 +21,8 @@ float mPosInit = 0;          // mm
 float mPosEnd = LONG_FUELLE; // mm
 float mPosCurrent;           // mm
 float mPosOxi = 0;           // mm
+float mPosVol = 0;
+
 
 //diametro 15 cm
 //area 176 cm2
