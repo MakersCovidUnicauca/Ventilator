@@ -75,8 +75,8 @@ SMInput currentInput;
 // valores por defecto y actualizados por el usuario
 float PIPVal = 28;     //Peak inspiratory pressure
 float PEEPVal = 6;     //presion residual en el sistema despues de la fase de exhalacion
-byte RPMVal = 10;     //respiraciones por minuto
-float VOLVal = 300.0; //Volumen total es la cantidad de aire dado al paciente en un ciclo respiratorio
+byte RPMVal = 15;     //respiraciones por minuto
+float VOLVal = 500.0; //Volumen total es la cantidad de aire dado al paciente en un ciclo respiratorio
 byte IEVal = 2;       //proporcion entre el periodo de inhalacion y el periodo de exhalacion
 
 float VOLRes = 0.0; //Volumen resiudal
@@ -120,6 +120,9 @@ const byte PM_FAB = 60;  //Presion maxima que no se puede exceder en los metodos
 //const byte PLI_FAB = 40; //Presion Limite Inhalacion
 
 // valores calculados en milliseconds
+#define TIME_OXY_AIR 700    //30 RPM
+#define RISE_TIME   1
+
 uint16_t TVal = 0;  //The length of time (in seconds) of an inhale/exhale cycle
 uint16_t TIVal = 0; //The length of time (in seconds) of the inspiratory phase
 uint16_t TI = 0;
