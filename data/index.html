@@ -126,7 +126,7 @@ Chart.defaults.global.pointDotStrokeWidth = 2;
       fill:false,
       data:[],
       order:1,
-      pointRadius:1
+      pointRadius:1,
     }]
   },
   options: {
@@ -162,7 +162,7 @@ Chart.defaults.global.pointDotStrokeWidth = 2;
         fill:false,
         data: [],
       }],
-      pointRadius:1
+      pointRadius:1,
     },
     options: {
       responsive: true,
@@ -195,7 +195,7 @@ Chart.defaults.global.pointDotStrokeWidth = 2;
   function init() {
     // Connect to WebSocket server
     var xAddress = location.hostname;
-    url = "ws://"+xAddress+":1337/"
+    url = "ws://192.168.1.17:1337/"
     console.log(url);
     wsConnect(url);
 
