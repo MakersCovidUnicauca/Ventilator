@@ -151,7 +151,7 @@ void loopGraphic(){
   webSocket.loop();
   if(sendGraphicFlag){
     sendGraphicFlag = 0;
-    DEBUG((WiFi.status() == WL_CONNECTED));
+   // DEBUG((WiFi.status() == WL_CONNECTED));
     if(StateClient){
       if(StatusGraphic){
         StatusGraphic=0;

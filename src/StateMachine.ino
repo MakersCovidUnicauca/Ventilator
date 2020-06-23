@@ -166,28 +166,29 @@ void calculePositions()
     float Vol;
     float Po = POVal * 0.01; //
     
+    VOLRes = (INITPOSITION - mPosCurrent) * RELMMVOL;
+    Vol = VOLMAX - VOLRes;
+    mPosVol = float(VOLVal / RELMMVOL);
+
+    /*
     if ((currentVentMode == VentMode::CV) || (currentVentMode == VentMode::CVA))
     {
       mPosVol = float(VOLVal / RELMMVOL);
-      //mPosVol = INITPOSITION - mPosVol;
-      VOLRes = (INITPOSITION - mPosCurrent) * RELMMVOL;
-      Vol = VOLMAX - VOLRes;
     }
     else if ((currentVentMode == VentMode::CP) || (currentVentMode == VentMode::CPA))
     {
-      VOLRes = (INITPOSITION - mPosCurrent) * RELMMVOL;
-      Vol = VOLMAX - VOLRes;
     }
     else{
       Vol = VOLVal;
     }
+    */
 
     mPosOxi = float(((1 - Po) * Vol / 0.79));
     mPosOxi = mPosCurrent - (mPosOxi / RELMMVOL);
  
     mPosEnd = float(Vol / RELMMVOL);
     DistMotor = mPosCurrent - mPosEnd;
-    VelMotor = float(mPosEnd / ((TEVal * (1 - Po)) / 1000.0));
+    VelMotor = float(mPosEnd / (TIME_OXY_AIR / 1000.0));
     AcelMotor = VelMotor * 20;
     SetMotor(DistMotor, VelMotor, AcelMotor);
 
@@ -318,16 +319,16 @@ void functInhale(void)
   pressInhale = pressureUser;
 #endif
 #ifdef TEST_MOTOR
-  FlagAire = false;
-
-  DistMotor = INITPOSITION;
   if ((currentVentMode == VentMode::CV) || (currentVentMode == VentMode::CVA))
   {
+    DistMotor = mPosVol;
     VelMotor = float(mPosVol / ((TIVal / 1000.0)));
   }
   else if ((currentVentMode == VentMode::CP) || (currentVentMode == VentMode::CPA))
   {
+    DistMotor = INITPOSITION;
     VelMotor = float(INITPOSITION / ((TIVal / 1000.0)));
+    VelMotor = RISE_TIME * VelMotor;
   }
   else{
     VelMotor = float(mPosEnd / ((TIVal / 1000.0)));

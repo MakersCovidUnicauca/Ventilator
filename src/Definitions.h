@@ -117,6 +117,9 @@ const byte PM_FAB = 60;  //Presion maxima que no se puede exceder en los metodos
 //const byte PLI_FAB = 40; //Presion Limite Inhalacion
 
 // valores calculados en milliseconds
+#define TIME_OXY_AIR 700    //30 RPM
+#define RISE_TIME   1
+
 uint16_t TVal = 0;  //The length of time (in seconds) of an inhale/exhale cycle
 uint16_t TIVal = 0; //The length of time (in seconds) of the inspiratory phase
 uint16_t TI = 0;
