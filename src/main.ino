@@ -11,6 +11,8 @@ void setup()
   Serial.begin(115200);
   Wire.begin(); // join i2c bus (address optional for master)
   delay(1000);
+  //EEPROM
+  EEPROM.begin(EEPROM_SIZE);
   DEBUG("Init Ventilator");
 #ifdef Graphic_Serial
   Serial.println("Fuelle,Paciente ");

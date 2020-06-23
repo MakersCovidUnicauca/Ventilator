@@ -4,6 +4,9 @@
 
 #include <Arduino.h>
 #include <Wire.h>
+//Memoria EEPROM
+#include <EEPROM.h>
+#define EEPROM_SIZE 100
 //Definicion de pines
 #include "PinOutVent.h"
 //Parametros mecanicos
