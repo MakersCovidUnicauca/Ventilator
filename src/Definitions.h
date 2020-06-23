@@ -122,6 +122,12 @@ const byte PM_FAB = 60;  //Presion maxima que no se puede exceder en los metodos
 // valores calculados en milliseconds
 #define TIME_OXY_AIR 700    //30 RPM
 #define RISE_TIME   1
+byte RPMValAsst = 6;
+uint16_t TIValAsst = 0; //The length of time (in seconds) of the inspiratory phase
+uint16_t THValAsst = 0;
+uint16_t TEValAsst = 0;   //The length of time (in seconds) of the expiratory phase
+uint16_t TValAsst = 0;  //The length of time (in seconds) of an inhale/exhale cycle
+uint16_t TIAsst = 0;
 
 uint16_t TVal = 0;  //The length of time (in seconds) of an inhale/exhale cycle
 uint16_t TIVal = 0; //The length of time (in seconds) of the inspiratory phase
@@ -162,6 +168,9 @@ bool FlagPressure = false;
 #define SENS_PRESS 2    //1-2 cmH2O
 unsigned long prevMicros;
 bool flagTime = false;
+bool flagTrigger = false;
+bool flagPlateau = false;
+byte idxDetect = 0;
 
 // Motor
 void refMotor();

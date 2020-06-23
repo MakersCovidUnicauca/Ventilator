@@ -30,7 +30,7 @@ String menuItem6 = "PO";
 String menuItem7 = "PR";
 String menuItem8 = "VOLUMEN";
 
-String ventMode[4] = { "CV", "CVA", "CP", "CPA" };
+String ventMode[6] = { "CV", "CVA", "CP", "CPA", "CVS", "CPS" };
 int currentVentMode  = 0;
 
 boolean up = false;

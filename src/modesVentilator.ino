@@ -91,7 +91,7 @@ void CtrlVol()
   }
 }
 
-
+/*
 void CtrlPEEP()
 {
     pressureUser = pressUser.readCmH2O() - offset1;
@@ -113,28 +113,39 @@ void CtrlPEEP()
         }
     }
 }
+*/
 
 void CtrlPP()
 {
-    pressureUser = pressUser.readCmH2O() - offset1;
-    if (pressureUser < (pressPlateau - SENS_PRESS))
-    {
-        if(flagTime == false){
-            prevMicros = micros();
-            flagTime = true;
-        }
-        else{
-            unsigned long currentMicros = micros();
-            if ((unsigned long)(currentMicros - prevMicros) >= INTERVAL)
-            {
-                DEBUG("PP_DETEC");
-                currentInput = SMInput::PPCtrl;
-                flagTime = false;
-            //    prevMicros = micros();
-            }
-        }
+  if ((currentVentMode == VentMode::CVS) || (currentVentMode == VentMode::CPS))
+  {
+    if(flagPlateau == true){
+      pressureUser = pressUser.readCmH2O() - offset1;
+      if (pressureUser < (pressPlateau - SENS_PRESS))
+      {
+          if(flagTime == false){
+              prevMicros = micros();
+              flagTime = true;
+          }
+          else{
+              unsigned long currentMicros = micros();
+              if ((unsigned long)(currentMicros - prevMicros) >= INTERVAL)
+              {
+                  DEBUG("PP_DETEC");
+                  asyncTaskTH.Stop();
+                  THVal = asyncTaskTH.GetElapsedTime() + THVal;
+                  asyncTaskTE.Start();
+                  currentInput = SMInput::PPCtrl;
+                  currentInput = SMInput::THEnd;
+                  flagTime = false;
+                  flagPlateau = false;
+              }
+          }
+      }
     }
+  }
 }
+
 
 void MngAssitExh()
 {
@@ -156,17 +167,44 @@ void MngAssitExh()
             Motor.stop();
           }
           asyncTaskTE.Stop();
-          //TEVal = asyncTaskTE.GetElapsedTime();
           asyncTaskTI.Start();
           currentInput = SMInput::TEEnd;
           flagTime = false;
-        //    prevMicros = micros();
-        }
+         }
       }
     }
   }
 }
 
+void MngEspExh()
+{
+  if ((currentVentMode == VentMode::CVS) || (currentVentMode == VentMode::CPS))
+  {
+    pressureUser = pressUser.readCmH2O() - offset1;
+    if (pressureUser <= (PEEPVal - SENS_PRESS))
+    {
+      if(flagTime == false){
+        prevMicros = micros();
+        flagTime = true;
+      }
+      else{
+        unsigned long currentMicros = micros();
+        if ((unsigned long)(currentMicros - prevMicros) >= INTERVAL)
+        {
+          DEBUG("ESP_EXH");
+          if(!((FlagOxig == false) && (FlagAire == false))){
+            Motor.stop();
+          }
+          asyncTaskTE.Stop();
+          TEVal = asyncTaskTE.GetElapsedTime() + TEVal;
+          asyncTaskTI.Start();
+          currentInput = SMInput::TEEnd;
+          flagTime = false;
+        }
+      }
+    }
+  }
+}
 
 void calculePressIns()
 {
@@ -216,14 +254,63 @@ void MngAssitInh()
 //if (mPosCurrent >= mPosVol)
 //pressureUser = pressUser.readCmH2O() - offset1;
 //    if (pressureUser >= PIPVal)
+void DetectRPM(){
+  if ((currentVentMode == VentMode::CVS) || (currentVentMode == VentMode::CPS))
+  {
+     if(idxDetect > 10){
+      idxDetect = 0;
+      THValAsst = THVal/10;
+      TEValAsst = TEVal/10;   //The length of time (in seconds) of the expiratory phase
+      TIAsst = TI/10;
+      TIValAsst = THValAsst + TIAsst;
+      TValAsst = TIValAsst + TEValAsst; //The length of time (in seconds) of an inhale/exhale cycle
+      RPMValAsst = (TIMESEC/TValAsst);
+        
+      TVal = 0;  //The length of time (in seconds) of an inhale/exhale cycle
+      TIVal = 0; //The length of time (in seconds) of the inspiratory phase
+      TI = 0;
+      TEVal = 0;   //The length of time (in seconds) of the expiratory phase
+      THVal = 0; // 0.2 second The amount of time (in seconds) to hold the compression at the end of the inhale for plateau pressure
+    
+#ifdef __DEBG__
+  Serial.print("TAsst: ");
+  Serial.print(TValAsst);
+  Serial.print(" TIAsst: ");
+  Serial.print(TIAsst);
+  Serial.print(" TPAsst: ");
+  Serial.print(THValAsst);
+  Serial.print(" TEAsst: ");
+  Serial.println(TEValAsst);
+#endif
+    
+    }
+    idxDetect++;
+  }
+}
+
 
 void MngEspInh()
 {
   if ((currentVentMode == VentMode::CVS) || (currentVentMode == VentMode::CPS))
   {
-    pressureUser = pressUser.readCmH2O() - offset1;
-    if (pressureUser <= (pressInhale - SENS_PRESS))
-    {
+    if(currentVentMode == VentMode::CVS){
+      pressureUser = pressUser.readCmH2O() - offset1;
+      if (pressureUser <= (pressInhale - SENS_PRESS))
+      {
+        flagTrigger = true;
+      }
+    }
+    else if(currentVentMode == VentMode::CVS){
+      if (mPosCurrent >= mPosVol){
+        flagTrigger = true;
+      }
+    }
+    else{
+      flagTrigger = false;
+    }
+
+    if(flagTrigger == true){
+
       if(flagTime == false){
         prevMicros = micros();
         flagTime = true;
@@ -237,13 +324,13 @@ void MngEspInh()
             Motor.stop();
           }
           asyncTaskTI.Stop();
-          TIVal = asyncTaskTI.GetElapsedTime();
+          TIVal = asyncTaskTI.GetElapsedTime() + TIVal;
           asyncTaskTH.Start();
           currentInput = SMInput::TIEnd;
           flagTime = false;
-        //    prevMicros = micros();
         }
       }
+      flagTrigger = false;
     }
   }
 }
