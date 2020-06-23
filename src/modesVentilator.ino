@@ -213,7 +213,6 @@ void MngAssitInh()
   }
 }
 
-
 //if (mPosCurrent >= mPosVol)
 //pressureUser = pressUser.readCmH2O() - offset1;
 //    if (pressureUser >= PIPVal)
