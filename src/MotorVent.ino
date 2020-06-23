@@ -43,7 +43,7 @@ void refMotor()
 
 #ifdef InitSensorEnable
   DEBUG("Searching position ");
-  Motor.setCurrentPosition(10);
+  Motor.setCurrentPosition(10*PulseXmm);
   DEBUG(GetPosition());
   SetMotor(refDistance, refSpeed, refAccel);
   while (digitalRead(HALL_SENS_PIN) != HIGH)
