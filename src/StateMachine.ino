@@ -144,9 +144,9 @@ void calculeTime()
     DEBUG("CTIME_ASSIT");
     TValAsst = (TIMESEC / RPMValAsst);  //10000
     TIValAsst = TValAsst / (1 + IEVal); //3333
-    TEValAsst = TIValAsst;
-    THValAsst = TIValAsst;
-    TIAsst = TIValAsst;
+    TEValAsst = TIValAsst * 6;
+    THValAsst = TIValAsst * 6;
+    TIAsst = TIValAsst * 6;
 
     asyncTaskTE.SetIntervalMillis(TEValAsst);
     asyncTaskTI.SetIntervalMillis(TIAsst);

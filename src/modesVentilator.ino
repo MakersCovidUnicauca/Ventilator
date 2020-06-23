@@ -319,7 +319,7 @@ void MngEspInh()
         unsigned long currentMicros = micros();
         if ((unsigned long)(currentMicros - prevMicros) >= INTERVAL)
         {
-          DEBUG("ASSIT_INH");
+          DEBUG("ESP_INH");
           if(!((currentInput == SMInput::VolCtrl) || (currentInput == SMInput::PICtrl))){
             Motor.stop();
           }
