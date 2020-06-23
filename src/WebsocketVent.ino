@@ -72,8 +72,7 @@ void onWebSocketEvent(uint8_t client_num,
 void onIndexRequest(AsyncWebServerRequest *request)
 {
   IPAddress remote_ip = request->client()->remoteIP();
-  DEBUG("[" + remote_ip.toString() +
-                 "] HTTP GET request of " + request->url());
+  DEBUG("[" + remote_ip.toString()+"] HTTP GET request of " + request->url());
   request->send(SPIFFS, "/index.html", "text/html");
 }
 
@@ -146,6 +145,7 @@ void setupGraphics()
 }
 
 char buff[15];
+int CounterLoss = 0;
 
 void loopGraphic(){
   webSocket.loop();
@@ -162,10 +162,13 @@ void loopGraphic(){
       }
       webSocket.sendTXT(numClient, msg2Web);
       StateClient = 0;
-      
+      CounterLoss = 0;
     }
+    
   }
 }
+
+
 void StateGraphicSend(){
       
       msg2Web = "c,"+ ModesVentString();
@@ -198,8 +201,7 @@ void SendGraphics()
       }
       multi += 5;
     DEBUG(msg2Web);
-    
- 
+  
 }
 
 String ModesVentString(){
