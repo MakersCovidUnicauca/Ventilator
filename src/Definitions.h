@@ -72,8 +72,8 @@ SMInput currentInput;
 // valores por defecto y actualizados por el usuario
 float PIPVal = 28;     //Peak inspiratory pressure
 float PEEPVal = 6;     //presion residual en el sistema despues de la fase de exhalacion
-byte RPMVal = 10;     //respiraciones por minuto
-float VOLVal = 300.0; //Volumen total es la cantidad de aire dado al paciente en un ciclo respiratorio
+byte RPMVal = 15;     //respiraciones por minuto
+float VOLVal = 500.0; //Volumen total es la cantidad de aire dado al paciente en un ciclo respiratorio
 byte IEVal = 2;       //proporcion entre el periodo de inhalacion y el periodo de exhalacion
 
 float VOLRes = 0.0; //Volumen resiudal
