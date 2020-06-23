@@ -68,6 +68,28 @@ void measurePress()
   }
 }
 
+void calculePlateauTest()
+{
+  if (FlagPressure)
+  {
+    pressureUser = pressUser.readCmH2O() - offset1;
+    if (pressureUser <= (pressInhale/2))
+    {
+      idxPlateau++;
+      if ((idxPlateau >= 4) && (flagPlateau == false))
+      {
+        pressPlateau = pressureUser;
+        String stringone = "Plateau:";
+        stringone = stringone + String(pressPlateau);
+        DEBUG(stringone);
+        flagPlateau = true;
+      }
+    }
+    FlagPressure = false;
+  }
+}
+
+
 void calculePlateau()
 {
   if (FlagPressure)
@@ -81,11 +103,12 @@ void calculePlateau()
     {
       idxPlateau++;
     }
-    if (idxPlateau == 4)
+    if ((idxPlateau >= 4) && (flagPlateau == false))
     {
       String stringone = "Plateau:";
       stringone = stringone + String(pressPlateau);
       DEBUG(stringone);
+      flagPlateau = true;
     }
     FlagPressure = false;
   }
@@ -115,6 +138,19 @@ void calculeTime()
   Serial.print(" TE: ");
   Serial.println(TEVal);
 #endif
+  }
+  if ((currentVentMode == VentMode::CVS) || (currentVentMode == VentMode::CPS))
+  {
+    DEBUG("CTIME_ASSIT");
+    TValAsst = (TIMESEC / RPMValAsst);  //10000
+    TIValAsst = TValAsst / (1 + IEVal); //3333
+    TEValAsst = TIValAsst;
+    THValAsst = TIValAsst;
+    TIAsst = TIValAsst;
+
+    asyncTaskTE.SetIntervalMillis(TEValAsst);
+    asyncTaskTI.SetIntervalMillis(TIAsst);
+    asyncTaskTH.SetIntervalMillis(THValAsst);
   }
 }
 
@@ -253,6 +289,7 @@ void stateInhale()
   CtrlPIP();
 //#ifdef TEST_MODE
   MngAssitInh();
+  MngEspInh();
 //#endif
 }
 
@@ -263,7 +300,9 @@ void statePause()
   if (currentInput == SMInput::BtnReset)
     changeState(SMState::CONFIG);
 #ifdef TEST_SENSOR
-  calculePlateau();
+  //calculePlateau();
+  calculePlateauTest();
+  CtrlPP();
 #endif
 }
 
@@ -278,6 +317,7 @@ void stateExhale()
 #endif
 //#ifdef TEST_MODE
   MngAssitExh();
+  MngEspExh();
 //#endif
 }
 
@@ -330,6 +370,17 @@ void functInhale(void)
     VelMotor = float(INITPOSITION / ((TIVal / 1000.0)));
     VelMotor = RISE_TIME * VelMotor;
   }
+  else if (currentVentMode == VentMode::CVS)
+  {
+    DistMotor = mPosVol;
+    VelMotor = float(mPosVol / ((TIValAsst / 1000.0)));
+  }
+  else if (currentVentMode == VentMode::CPS)
+  {
+    DistMotor = INITPOSITION;
+    VelMotor = float(INITPOSITION / ((TIValAsst / 1000.0)));
+    VelMotor = RISE_TIME * VelMotor;
+  }
   else{
     VelMotor = float(mPosEnd / ((TIVal / 1000.0)));
   }
@@ -345,6 +396,7 @@ void functPause(void)
   pressureUser = pressUser.readCmH2O() - offset1;
   pressPlateau = pressureUser;
   idxPlateau = 0;
+  flagPlateau = false;
 #endif
 }
 
@@ -374,6 +426,7 @@ void functExhale(void)
 #ifdef TEST_SENSOR
   pressExhale = pressureUser;
 #endif
+  DetectRPM();
 #ifdef TEST_MOTOR
   calculePositions();
 #endif

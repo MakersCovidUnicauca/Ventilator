@@ -79,7 +79,7 @@ if (up && page == 1 ) {
     currentVentMode--;
     if(currentVentMode == -1)
     {
-      currentVentMode = 3;
+      currentVentMode = 5;
     }
   }
   else if (up && page == 2 && menuitem==2 ) {
@@ -174,7 +174,7 @@ if (up && page == 1 ) {
   }else if (down && page == 2 && menuitem==1) {
     down = false;
     currentVentMode++;
-    if(currentVentMode == 4)
+    if(currentVentMode == 6)
     {
       currentVentMode = 0;
     }
