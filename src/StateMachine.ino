@@ -93,15 +93,17 @@ void calculePlateau()
 
 void calculeTime()
 {
-  DEBUG("CTIME");
-  TVal = (TIMESEC / RPMVal);
-  TIVal = TVal / (1 + IEVal);
-  TEVal = TVal - TIVal;
-  TI = TIVal - THVal;
+  if ((currentVentMode == VentMode::CV) || (currentVentMode == VentMode::CP))
+  {
+    DEBUG("CTIME");
+    TVal = (TIMESEC / RPMVal);
+    TIVal = TVal / (1 + IEVal);
+    TEVal = TVal - TIVal;
+    TI = TIVal - THVal;
 
-  asyncTaskTE.SetIntervalMillis(TEVal);
-  asyncTaskTI.SetIntervalMillis(TI);
-  asyncTaskTH.SetIntervalMillis(THVal);
+    asyncTaskTE.SetIntervalMillis(TEVal);
+    asyncTaskTI.SetIntervalMillis(TI);
+    asyncTaskTH.SetIntervalMillis(THVal);
 
 #ifdef __DEBG__
   Serial.print("T: ");
@@ -113,6 +115,7 @@ void calculeTime()
   Serial.print(" TE: ");
   Serial.println(TEVal);
 #endif
+  }
 }
 
 void alarma(byte alarm)
@@ -358,7 +361,7 @@ void functExhale(void)
       currentVentMode = VentMode::CV;
     }
 #endif
-    calculeTime();
+    calculeTime(); //solo C/A
 #ifdef TEST_SENSOR
     asyncTaskPress.Start();
 #endif
