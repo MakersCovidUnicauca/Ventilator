@@ -49,7 +49,7 @@ void setup()
   setupGraphics();
   refMotorLCD();
   DEBUG("Serching Motor");
-  refMotor(); //busca el sensor optico  solo inicio
+  //refMotor(); //busca el sensor optico  solo inicio
   DEBUG("Finish Motor");
   currentState = INIT;
   functInit();
